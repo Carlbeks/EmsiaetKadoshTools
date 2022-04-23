@@ -968,7 +968,6 @@ def ektmathmode():
         return Return
     sig_mathmode=1
     trimode='deg'
-    print('Hello ! ')
     while sig_mathmode==1:
         ipt=input('EKTMathMode('+trimode+') >>> ')
         if len(ipt)==0:
