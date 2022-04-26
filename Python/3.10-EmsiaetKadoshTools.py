@@ -81,7 +81,7 @@ def EmsiaetKadoshTools(TargetFunction):
             print('┏━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓')
             print('┃FunctionName ┃FunctionGrammar       ┃Details                     ┃')
             print('┡━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩')
-            print('│factorial    │fc(a);factorial(a)    │factorial culculartor       │')
+            print('│factorial    │fc(a);factorial(a)    │factorial calculartor       │')
             print('├─────────────┼──────────────────────┼────────────────────────────┤')
             print("│trigonometric│sind(a);sinrp(a)      │'r' means rad. 'p' means Pi.│")
             print('│(also tri)   │cosd(a);cosrp(a)      │sinrp(1/6)="sin(π/6)"       │')
