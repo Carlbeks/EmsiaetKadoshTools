@@ -59,7 +59,7 @@ public:
 			length++;
 		}
 		else {
-			cout << "Too much elements! ( max = 1024 but get more. )" << endl;
+			cout << "Too many elements! ( max = 1024 but get more. )" << endl;
 			cout << "元素数量太多。（最大允许1024个元素但是被加入了超过1024个元素。）" << endl;
 		}
 		return;
