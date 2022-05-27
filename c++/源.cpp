@@ -173,12 +173,12 @@ void sethook() {
 	HHOOK hook = ::SetWindowsHookEx(WH_KEYBOARD_LL, EmsiaetKadoshHooks, 0, 0);
 	while (true) {
 		HHOOK hook = ::SetWindowsHookEx(WH_KEYBOARD_LL, EmsiaetKadoshHooks, 0, 0);
-		MSG msg;
-		if (GetMessage(&msg, NULL, 0, 0)) {
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-			DefWindowProc(HWND_BROADCAST, msg.message, msg.wParam, msg.lParam);
-		}
+		//MSG msg;
+		//if (GetMessage(&msg, NULL, 0, 0)) {
+		//	TranslateMessage(&msg);
+		//	DispatchMessage(&msg);
+		//	DefWindowProc(HWND_BROADCAST, msg.message, msg.wParam, msg.lParam);
+		//}
 		Sleep(500);
 		UnhookWindowsHookEx(hook);
 	}
