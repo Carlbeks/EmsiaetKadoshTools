@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\c++\源.cpp">
+    <ClCompile Include="..\c++\EmsiaetKadoshAntiHooks.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -7,6 +7,7 @@
 #include <thread>
 #pragma warning(disable:4309)
 #pragma warning(disable:4311)
+
 std::string dec2hex(int i, int width)
 {
 	std::stringstream ioss;     //定义字符串流
@@ -166,26 +167,44 @@ LRESULT CALLBACK EmsiaetKadoshHooks(
 		std::cout << std::endl;
 	}
 	PostMessage(HWND_BROADCAST, nCode, w, l);
+	//SendMessage(HWND_BROADCAST, nCode, w, l);
 	return 1;
 }
 
-void sethook() {
-	HHOOK hook = ::SetWindowsHookEx(WH_KEYBOARD_LL, EmsiaetKadoshHooks, 0, 0);
+void r1(int t) {
 	while (true) {
 		HHOOK hook = ::SetWindowsHookEx(WH_KEYBOARD_LL, EmsiaetKadoshHooks, 0, 0);
-		//MSG msg;
-		//if (GetMessage(&msg, NULL, 0, 0)) {
-		//	TranslateMessage(&msg);
-		//	DispatchMessage(&msg);
-		//	DefWindowProc(HWND_BROADCAST, msg.message, msg.wParam, msg.lParam);
-		//}
-		Sleep(500);
+		MSG msg;
+		GetMessage(&msg, NULL, 0, 0);
+		Sleep(t);
 		UnhookWindowsHookEx(hook);
+		//std::cout << "One time loop closed." << std::endl;
 	}
 	return;
 }
 
-int main() {
+void r2(int t) {
+	while (true) {
+		HHOOK hook = ::SetWindowsHookEx(WH_KEYBOARD_LL, EmsiaetKadoshHooks, 0, 0);
+		Sleep(t);
+		UnhookWindowsHookEx(hook);
+		std::cout << "One time loop closed." << std::endl;
+	}
+	return;
+}
+
+void sethook(int t, int r) {
+	//HHOOK hook = ::SetWindowsHookEx(WH_KEYBOARD_LL, EmsiaetKadoshHooks, 0, 0);
+	if (r == 1) {
+		r1(t);
+	}
+	else if (r == 2) {
+		r2(t);
+	}
+	return;
+}
+
+int main() {s
 	/*
 	//window class
 	TCHAR name[] = TEXT("EmsiaetKadoshHook Test Window");
@@ -212,7 +231,13 @@ int main() {
 	win.hInstance = hInstance;
 	win.lpfnWndProc = windowproc;
 	*/
-	std::thread thr(sethook);
-	thr.join();
+	int t;
+	int r;
+	std::cout << "<Require> << \'挂钩频率\' << 每 ____ 毫秒 |" << "\b\b\b\b\b\b\b\b\b\b\b";
+	std::cin >> t;
+	std::cout << "<Require> << \'输出按键信息（输入1）或 传递给系统处理\' << _\b";
+	std::cin >> r;
+	std::thread thr1(sethook,t,r);
+	thr1.join();
 	return 0;
 }
