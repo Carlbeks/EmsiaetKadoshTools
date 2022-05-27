@@ -22,21 +22,6 @@ std::string dec2hex(int i, int width)
 	return s;
 }
 
-void sethook() {
-	HHOOK hook = ::SetWindowsHookEx(WH_KEYBOARD_LL, EmsiaetKadoshHooks, 0, 0);
-	while (true) {
-		HHOOK hook = ::SetWindowsHookEx(WH_KEYBOARD_LL, EmsiaetKadoshHooks, 0, 0);
-		MSG msg;
-		if (GetMessage(&msg, NULL, 0, 0)) {
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-		Sleep(500);
-		UnhookWindowsHookEx(hook);
-	}
-	return;
-}
-
 LRESULT CALLBACK EmsiaetKadoshHooks(
 	int nCode,
 	WPARAM w,
@@ -183,6 +168,23 @@ LRESULT CALLBACK EmsiaetKadoshHooks(
 	PostMessage(HWND_BROADCAST, nCode, w, l);
 	return 1;
 }
+
+void sethook() {
+	HHOOK hook = ::SetWindowsHookEx(WH_KEYBOARD_LL, EmsiaetKadoshHooks, 0, 0);
+	while (true) {
+		HHOOK hook = ::SetWindowsHookEx(WH_KEYBOARD_LL, EmsiaetKadoshHooks, 0, 0);
+		MSG msg;
+		if (GetMessage(&msg, NULL, 0, 0)) {
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+			DefWindowProc(HWND_BROADCAST, msg.message, msg.wParam, msg.lParam);
+		}
+		Sleep(500);
+		UnhookWindowsHookEx(hook);
+	}
+	return;
+}
+
 int main() {
 	/*
 	//window class
