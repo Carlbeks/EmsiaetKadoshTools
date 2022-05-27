@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="HookOutputKey.cpp">
+    <ClCompile Include="..\c++\源.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
