@@ -22,6 +22,21 @@ std::string dec2hex(int i, int width)
 	return s;
 }
 
+void sethook() {
+	HHOOK hook = ::SetWindowsHookEx(WH_KEYBOARD_LL, EmsiaetKadoshHooks, 0, 0);
+	while (true) {
+		HHOOK hook = ::SetWindowsHookEx(WH_KEYBOARD_LL, EmsiaetKadoshHooks, 0, 0);
+		MSG msg;
+		if (GetMessage(&msg, NULL, 0, 0)) {
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		Sleep(500);
+		UnhookWindowsHookEx(hook);
+	}
+	return;
+}
+
 LRESULT CALLBACK EmsiaetKadoshHooks(
 	int nCode,
 	WPARAM w,
@@ -30,10 +45,6 @@ LRESULT CALLBACK EmsiaetKadoshHooks(
 	KBDLLHOOKSTRUCT* T = (KBDLLHOOKSTRUCT*)l;
 	DWORD x = T -> vkCode;
 	int c = (int)x;
-	MSG msg;
-	GetMessage(&msg, NULL, 0, 0);
-	TranslateMessage(&msg);
-	DispatchMessage(&msg);
 	if (w == WM_KEYDOWN) {
 		std::string strTemp = dec2hex(c, 2);
 		printf(" >> From ><< Keyboard vkcode >> ");
@@ -169,16 +180,7 @@ LRESULT CALLBACK EmsiaetKadoshHooks(
 		}
 		std::cout << std::endl;
 	}
-	
-	SendMessage(HWND_BROADCAST, nCode, w, l);
-
-	/*MSG msg;
-	while (GetMessage(&msg, NULL, 0, 0)) {
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-		PostMessage(HWND_BROADCAST, msg.message, msg.wParam, msg.lParam);
-		std::cout << msg.hwnd << std::endl;
-	}*/
+	PostMessage(HWND_BROADCAST, nCode, w, l);
 	return 1;
 }
 int main() {
@@ -208,11 +210,7 @@ int main() {
 	win.hInstance = hInstance;
 	win.lpfnWndProc = windowproc;
 	*/
-	HHOOK hook = ::SetWindowsHookEx(WH_KEYBOARD_LL, EmsiaetKadoshHooks, 0, 0);
-	while (true) {
-		HHOOK hook = ::SetWindowsHookEx(WH_KEYBOARD_LL, EmsiaetKadoshHooks, 0, 0);
-		Sleep(500);
-		UnhookWindowsHookEx(hook);
-	}
+	std::thread thr(sethook);
+	thr.join();
 	return 0;
 }
