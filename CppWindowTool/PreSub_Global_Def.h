@@ -173,14 +173,15 @@ struct BUTTON {
 
 int			windowGUIStatus_tempstore = EK_GUI_STARTER;
 int			windowGUIStatusLast_tempstore = EK_GUI_STARTER;
+int			windowGUIAntiBlack_tempstore;
 bool		windowNotPrintingBool_judge = true;
 BUTTON		guiButtons;
 
 
 // 全局变量:
 HINSTANCE hInst;                                // 当前实例
-//WCHAR szTitle[MAX_LOADSTRING];                  // 标题栏文本  "EmsiaetKadosh's Desktop Tool"
-//WCHAR szWindowClass[MAX_LOADSTRING];            // 主窗口类名  "EmsiaetKadosh's Desktop Tool"
+WCHAR szTitle[MAX_LOADSTRING];                  // 标题栏文本  "EmsiaetKadosh's Desktop Tool"
+WCHAR szWindowClass[MAX_LOADSTRING];            // 主窗口类名  "EmsiaetKadosh's Desktop Tool"
 HWND MainhWnd;                                  // 当前句柄
 
 //Test

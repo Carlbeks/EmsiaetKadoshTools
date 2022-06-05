@@ -91,15 +91,14 @@ int fullscreenPrinter() {
 		case EK_GUI_STARTER:
 			DestroyWindow(guiButtons.__STARTER.Home);
 			DestroyWindow(guiButtons.__STARTER.Normal);
-			windowGUIStatusLast_tempstore = windowGUIStatus_tempstore;
 			break;
 		case EK_GUI_WINDOW:
 			DestroyWindow(guiButtons.__WINDOW.BACKtoSTART);
-			windowGUIStatusLast_tempstore = windowGUIStatus_tempstore;
 			break;
 		default:
 			break;
 		}
+		windowGUIStatusLast_tempstore = windowGUIStatus_tempstore;
 	}
 	if (windowGUIStatus_tempstore == EK_GUI_STARTER /*开始界面*/) {
 		HRGN rgn11 = CreateRoundRectRgn(

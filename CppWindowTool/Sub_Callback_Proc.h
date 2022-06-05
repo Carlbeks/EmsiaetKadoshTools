@@ -626,10 +626,10 @@ void callbackKeyEvent(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	/*
 	* Ctrl + F + S + C : ÇÐ»»È«ÆÁ
 	*/
-	if (kd.def.ctrl == 1 and kd.chr.f == 1 and kd.chr.c == 1 and kd.chr.s == 1 and windowGUIStatus_tempstore != EK_GUI_BLACK /*ºÚÆÁ½ûÖ¹ÇÐ»»*/) {
+	if (kd.def.ctrl == 1 and kd.chr.f == 1 and kd.chr.c == 1 and kd.chr.s == 1) {
 		if (fullscreenBool_judge) {
 			SetWindowLongPtr(hWnd, GWL_STYLE, windowStyleLastDword_tempstore);
-			SetWindowPos(hWnd, NULL,
+			SetWindowPos(hWnd, HWND_NOTOPMOST,
 				windowRectangleLastRect_tempstore.left,
 				windowRectangleLastRect_tempstore.top,
 				windowRectangleLastRect_tempstore.right - windowRectangleLastRect_tempstore.left,
@@ -641,10 +641,10 @@ void callbackKeyEvent(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			windowStyleLastDword_tempstore = GetWindowLong(hWnd, GWL_STYLE);
 			GetWindowRect(hWnd, &windowRectangleLastRect_tempstore);
 			SetWindowLongPtr(hWnd, GWL_STYLE, WS_VISIBLE | WS_POPUP);
-			SetWindowPos(hWnd, NULL, 0, 0, fullscreenMaxWidthInt_store, fullscreenMaxHeightInt_store, SWP_FRAMECHANGED);
+			SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, fullscreenMaxWidthInt_store, fullscreenMaxHeightInt_store, SWP_FRAMECHANGED);
 			fullscreenBool_judge = true;
 		}
-		PostMessage(hWnd, WM_PAINT, 0, 0);
+		PostMessage(MainhWnd, WM_PAINT, 0, 0);
 	}
 	/*
 	* Ctrl + A + E + X : ÍË³ö
@@ -658,10 +658,11 @@ void callbackKeyEvent(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	else if (kd.def.ctrl == 1 and kd.chr.s == 1 and kd.chr.c == 1 and kd.chr.b == 1) {
 		if (windowGUIStatus_tempstore != EK_GUI_BLACK) {
 			windowGUIStatus_tempstore = EK_GUI_BLACK;
+			windowGUIAntiBlack_tempstore = windowGUIStatusLast_tempstore;
 			PostMessage(MainhWnd, WM_PAINT, 0, 0);
 		}
 		else {
-			windowGUIStatus_tempstore = windowGUIStatusLast_tempstore;
+			windowGUIStatus_tempstore = windowGUIAntiBlack_tempstore;
 			PostMessage(MainhWnd, WM_PAINT, 0, 0);
 		}
 	}
