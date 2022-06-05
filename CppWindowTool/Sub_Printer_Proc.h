@@ -81,8 +81,6 @@ int fullscreenPrinter() {
 	windowWidthInt_tempstore = temp_rect.right - temp_rect.left;
 	windowHeightInt_tempstore = temp_rect.bottom - temp_rect.top;
 	
-	PAINTSTRUCT ps;
-	HDC hdc = BeginPaint(MainhWnd, &ps);
 	if (windowGUIStatusLast_tempstore != windowGUIStatus_tempstore) {
 		switch (windowGUIStatusLast_tempstore)
 		{
@@ -100,6 +98,8 @@ int fullscreenPrinter() {
 		}
 		windowGUIStatusLast_tempstore = windowGUIStatus_tempstore;
 	}
+	PAINTSTRUCT ps;
+	HDC hdc = BeginPaint(MainhWnd, &ps);
 	if (windowGUIStatus_tempstore == EK_GUI_STARTER /*开始界面*/) {
 		HRGN rgn11 = CreateRoundRectRgn(
 			(int)(windowWidthInt_tempstore * 2 / 30),
@@ -130,7 +130,6 @@ int fullscreenPrinter() {
 		FillRgn(hdc, rgn13, brush);
 		DeleteObject(pen);
 		DeleteObject(brush);
-		EndPaint(MainhWnd, &ps);
 		//按钮定义
 		DestroyWindow(guiButtons.__STARTER.Home);
 		guiButtons.__STARTER.Home = CreateWindow(
@@ -167,13 +166,12 @@ int fullscreenPrinter() {
 	else if (windowGUIStatus_tempstore == EK_GUI_BLACK /*黑屏界面*/) {
 		HRGN rgnBLACK = CreateRectRgn(
 			0,0,
-			(int)(windowWidthInt_tempstore),
-			(int)(windowHeightInt_tempstore));
-		HBRUSH brush = CreateSolidBrush(RGB(0, 0, 0));
-		SelectObject(hdc, brush);
-		FillRgn(hdc, rgnBLACK, brush);
-		DeleteObject(brush);
-		EndPaint(MainhWnd, &ps);
+			(int)(fullscreenMaxWidthInt_store),
+			(int)(fullscreenMaxHeightInt_store));
+		HBRUSH brushB = CreateSolidBrush(RGB(111, 0, 0));
+		SelectObject(hdc, brushB);
+		FillRgn(hdc, rgnBLACK, brushB);
+		DeleteObject(brushB);
 	}
 	else if (windowGUIStatus_tempstore == EK_GUI_WINDOW /*窗口集合界面*/) {
 		DestroyWindow(guiButtons.__WINDOW.BACKtoSTART);
@@ -194,7 +192,7 @@ int fullscreenPrinter() {
 	}
 	else {
 	}
-	
+	EndPaint(MainhWnd, &ps);
 	return 0;
 }
 

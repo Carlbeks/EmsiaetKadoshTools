@@ -80,7 +80,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(CreateSolidBrush(RGB(0,0,0))/*COLOR_WINDOW+1*/);
     wcex.lpszMenuName   = NULL;//MAKEINTRESOURCEW(IDC_CPPWINDOWTOOL);
-    wcex.lpszClassName  = /*_T("EmsiaetKadosh's Desktop Tool");*/szWindowClass;
+    wcex.lpszClassName  = _T("EmsiaetKadosh's Desktop Tool");//szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
     return RegisterClassExW(&wcex);
@@ -99,23 +99,26 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
     hInst = hInstance; // 将实例句柄存储在全局变量中
-    MainhWnd = CreateWindowW(/*L"EmsiaetKadosh's Desktop Tool", L"EmsiaetKadosh's Desktop Tool",*/szWindowClass, szTitle, WS_SYSMENU | WS_OVERLAPPED | WS_MINIMIZEBOX | WS_MAXIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, nullptr, nullptr, hInstance, nullptr);
+    MainhWnd = CreateWindowW(L"EmsiaetKadosh's Desktop Tool", L"EmsiaetKadosh's Desktop Tool",
+        /*szWindowClass, szTitle,*/
+        WS_OVERLAPPEDWINDOW,
+        (int)(fullscreenMaxWidthInt_store / 6),
+        (int)(fullscreenMaxHeightInt_store / 6),
+        (int)(fullscreenMaxWidthInt_store / 1.5),
+        (int)(fullscreenMaxHeightInt_store / 1.5),
+        nullptr, nullptr, hInstance, nullptr);
 
     if (!MainhWnd)
     {
         return FALSE;
     }
 
-    //全屏化
-    windowStyleLastDword_tempstore = GetWindowLong(MainhWnd, GWL_STYLE);
     GetWindowRect(MainhWnd, &windowRectangleLastRect_tempstore);
-    SetWindowLongPtr(MainhWnd, GWL_STYLE, WS_VISIBLE | WS_POPUP);
-    SetWindowPos(MainhWnd, HWND_TOPMOST, 0, 0, fullscreenMaxWidthInt_store, fullscreenMaxHeightInt_store, SWP_FRAMECHANGED);
-    fullscreenBool_judge = true;
+    SetWindowPos(MainhWnd, HWND_NOTOPMOST, 0, 0, fullscreenMaxWidthInt_store, fullscreenMaxHeightInt_store, SWP_FRAMECHANGED);
+    fullscreenBool_judge = false;
     ShowWindow(MainhWnd, nCmdShow);
     UpdateWindow(MainhWnd);
     //置顶
-    //if (MessageBox(NULL, L"启动成功！", L"EmsiaetKadosh's Desktop Tool Presentation", MB_OK)){}
     std::thread setWindowTop(setTop, MainhWnd);
     setWindowTop.detach();
     // 添加自定义动作

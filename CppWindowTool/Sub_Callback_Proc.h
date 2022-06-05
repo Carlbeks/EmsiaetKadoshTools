@@ -629,7 +629,7 @@ void callbackKeyEvent(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	if (kd.def.ctrl == 1 and kd.chr.f == 1 and kd.chr.c == 1 and kd.chr.s == 1) {
 		if (fullscreenBool_judge) {
 			SetWindowLongPtr(hWnd, GWL_STYLE, windowStyleLastDword_tempstore);
-			SetWindowPos(hWnd, HWND_NOTOPMOST,
+			SetWindowPos(hWnd, HWND_TOPMOST,
 				windowRectangleLastRect_tempstore.left,
 				windowRectangleLastRect_tempstore.top,
 				windowRectangleLastRect_tempstore.right - windowRectangleLastRect_tempstore.left,
@@ -640,7 +640,7 @@ void callbackKeyEvent(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		else {
 			windowStyleLastDword_tempstore = GetWindowLong(hWnd, GWL_STYLE);
 			GetWindowRect(hWnd, &windowRectangleLastRect_tempstore);
-			SetWindowLongPtr(hWnd, GWL_STYLE, WS_VISIBLE | WS_POPUP);
+			SetWindowLongPtr(hWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW | WS_VISIBLE);
 			SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, fullscreenMaxWidthInt_store, fullscreenMaxHeightInt_store, SWP_FRAMECHANGED);
 			fullscreenBool_judge = true;
 		}
@@ -659,12 +659,27 @@ void callbackKeyEvent(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		if (windowGUIStatus_tempstore != EK_GUI_BLACK) {
 			windowGUIStatus_tempstore = EK_GUI_BLACK;
 			windowGUIAntiBlack_tempstore = windowGUIStatusLast_tempstore;
-			PostMessage(MainhWnd, WM_PAINT, 0, 0);
 		}
 		else {
 			windowGUIStatus_tempstore = windowGUIAntiBlack_tempstore;
-			PostMessage(MainhWnd, WM_PAINT, 0, 0);
 		}
+		RECT temp_rect;
+		GetWindowRect(hWnd, &temp_rect);
+		PostMessage(MainhWnd, WM_PAINT, 0, 0);
+		SetWindowPos(hWnd, HWND_TOPMOST,
+			fullscreenMaxWidthInt_store,
+			fullscreenMaxHeightInt_store,
+			temp_rect.right - temp_rect.left,
+			temp_rect.bottom - temp_rect.top,
+			NULL);
+		PostMessage(MainhWnd, WM_PAINT, 0, 0);
+		SetWindowPos(hWnd, HWND_TOPMOST,
+			temp_rect.left,
+			temp_rect.top,
+			temp_rect.right - temp_rect.left,
+			temp_rect.bottom - temp_rect.top,
+			NULL);
+		PostMessage(MainhWnd, WM_PAINT, 0, 0);
 	}
 	else {
 
