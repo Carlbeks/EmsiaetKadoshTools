@@ -1,140 +1,20 @@
 #pragma once
 
 
-#include "PreSub_Global_Def.h"
-/*
-#define VK_LBUTTON        0x01
-#define VK_RBUTTON        0x02
-#define VK_CANCEL         0x03
-#define VK_MBUTTON        0x04    // NOT contiguous with L & RBUTTON
+#include "Pre_Global_Def.h"
 
-#define VK_BACK           0x08
-#define VK_TAB            0x09
-
-#define VK_CLEAR          0x0C
-#define VK_RETURN         0x0D
-
-#define VK_SHIFT          0x10
-#define VK_CONTROL        0x11
-#define VK_MENU           0x12
-#define VK_PAUSE          0x13
-#define VK_CAPITAL        0x14
-#define VK_KANA           0x15
-//#define VK_HANGEUL        0x15  old name - should be here for compatibility 
-#define VK_HANGUL         0x15
-#define VK_JUNJA          0x17
-#define VK_FINAL          0x18
-#define VK_HANJA          0x19
-#define VK_KANJI          0x19
-
-#define VK_ESCAPE         0x1B
-#define VK_CONVERT        0x1C
-#define VK_NONCONVERT     0x1D
-#define VK_ACCEPT         0x1E
-#define VK_MODECHANGE     0x1F
-#define VK_SPACE          0x20
-#define VK_PRIOR          0x21
-#define VK_NEXT           0x22
-#define VK_END            0x23
-#define VK_HOME           0x24
-#define VK_LEFT           0x25
-#define VK_UP             0x26
-#define VK_RIGHT          0x27
-#define VK_DOWN           0x28
-#define VK_SELECT         0x29
-#define VK_PRINT          0x2A
-#define VK_EXECUTE        0x2B
-#define VK_SNAPSHOT       0x2C
-#define VK_INSERT         0x2D
-#define VK_DELETE         0x2E
-#define VK_HELP           0x2F
- // VK_0 thru VK_9 are the same as ASCII '0' thru '9' (0x30 - 0x39) 
- // VK_A thru VK_Z are the same as ASCII 'A' thru 'Z' (0x41 - 0x5A) 
-#define VK_LWIN           0x5B
-#define VK_RWIN           0x5C
-#define VK_APPS           0x5D
-
-#define VK_NUMPAD0        0x60
-#define VK_NUMPAD1        0x61
-#define VK_NUMPAD2        0x62
-#define VK_NUMPAD3        0x63
-#define VK_NUMPAD4        0x64
-#define VK_NUMPAD5        0x65
-#define VK_NUMPAD6        0x66
-#define VK_NUMPAD7        0x67
-#define VK_NUMPAD8        0x68
-#define VK_NUMPAD9        0x69
-#define VK_MULTIPLY       0x6A
-#define VK_ADD            0x6B
-#define VK_SEPARATOR      0x6C
-#define VK_SUBTRACT       0x6D
-#define VK_DECIMAL        0x6E
-#define VK_DIVIDE         0x6F
-#define VK_F1             0x70
-#define VK_F2             0x71
-#define VK_F3             0x72
-#define VK_F4             0x73
-#define VK_F5             0x74
-#define VK_F6             0x75
-#define VK_F7             0x76
-#define VK_F8             0x77
-#define VK_F9             0x78
-#define VK_F10            0x79
-#define VK_F11            0x7A
-#define VK_F12            0x7B
-#define VK_F13            0x7C
-#define VK_F14            0x7D
-#define VK_F15            0x7E
-#define VK_F16            0x7F
-#define VK_F17            0x80
-#define VK_F18            0x81
-#define VK_F19            0x82
-#define VK_F20            0x83
-#define VK_F21            0x84
-#define VK_F22            0x85
-#define VK_F23            0x86
-#define VK_F24            0x87
-
-#define VK_NUMLOCK        0x90
-#define VK_SCROLL         0x91
- *
- * VK_L* & VK_R* - left and right Alt, Ctrl and Shift virtual keys.
- * Used only as parameters to GetAsyncKeyState() and GetKeyState().
- * No other API or message will distinguish left and right keys in this way.
- *
-#define VK_LSHIFT         0xA0
-#define VK_RSHIFT         0xA1
-#define VK_LCONTROL       0xA2
-#define VK_RCONTROL       0xA3
-#define VK_LMENU          0xA4
-#define VK_RMENU          0xA5
-
-#if(WINVER >= 0x0400)
-#define VK_PROCESSKEY     0xE5
-#endif // WINVER >= 0x0400 
-
-#define VK_ATTN           0xF6
-#define VK_CRSEL          0xF7
-#define VK_EXSEL          0xF8
-#define VK_EREOF          0xF9
-#define VK_PLAY           0xFA
-#define VK_ZOOM           0xFB
-#define VK_NONAME         0xFC
-#define VK_PA1            0xFD
-#define VK_OEM_CLEAR      0xFE
-*/
-
-// PreDef Global WindowCallback
-void callbackKeyEvent(HWND, UINT, WPARAM, LPARAM);
 
 // 
-// 【分层】
-// 当窗口线程接收到消息时，执行该callback函数。
-// 本函数只为分层而创建，由于switch和judge&execute代码太长。
+// Def callbackKeyEvent
+// 函数封装了窗口收到键盘进程的消息。主要由WM_KEYUP和WM_KEYDOWN驱动
 //
 void callbackKeyEvent(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-	if (msg != WM_KEYDOWN && msg != WM_KEYUP) {
-		return;
+	if (msg != WM_KEYDOWN && msg != WM_SYSKEYDOWN && msg != WM_SYSKEYUP && msg != WM_KEYUP) { return; }
+	if (msg == WM_SYSKEYDOWN) {
+		msg = WM_KEYDOWN;
+	}
+	else if (msg == WM_SYSKEYUP) {
+		msg = WM_KEYUP;
 	}
 	switch (wParam)
 	{
@@ -178,6 +58,8 @@ void callbackKeyEvent(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			kd.def.shift = 0;
 		}
 		break;
+	case VK_LCONTROL:
+	case VK_RCONTROL:
 	case VK_CONTROL:
 		if (msg == WM_KEYDOWN) {
 			kd.def.ctrl = 1;
@@ -187,6 +69,8 @@ void callbackKeyEvent(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			kd.def.ctrl = 0;
 		}
 		break;
+	case VK_LMENU:
+	case VK_RMENU:
 	case VK_MENU:
 		if (msg == WM_KEYDOWN) {
 			kd.def.menu = 1;
@@ -316,6 +200,7 @@ void callbackKeyEvent(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		}
 		break;
 	case 48:
+	case VK_NUMPAD0:
 		if (msg == WM_KEYDOWN) {
 			kd.num._0 = 1;
 		}
@@ -324,6 +209,7 @@ void callbackKeyEvent(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		}
 		break;
 	case 49:
+	case VK_NUMPAD1:
 		if (msg == WM_KEYDOWN) {
 			kd.num._1 = 1;
 		}
@@ -332,6 +218,7 @@ void callbackKeyEvent(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		}
 		break;
 	case 50:
+	case VK_NUMPAD2:
 		if (msg == WM_KEYDOWN) {
 			kd.num._2 = 1;
 		}
@@ -340,14 +227,25 @@ void callbackKeyEvent(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		}
 		break;
 	case 51:
+	case VK_NUMPAD3:
 		if (msg == WM_KEYDOWN) {
 			kd.num._3 = 1;
+		}
+		else {
+			kd.num._3 = 0;
+		}
+		break;
+	case 52:
+	case VK_NUMPAD4:
+		if (msg == WM_KEYDOWN) {
+			kd.num._4 = 1;
 		}
 		else {
 			kd.num._4 = 0;
 		}
 		break;
-	case 52:
+	case 53:
+	case VK_NUMPAD5:
 		if (msg == WM_KEYDOWN) {
 			kd.num._5 = 1;
 		}
@@ -355,7 +253,8 @@ void callbackKeyEvent(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			kd.num._5 = 0;
 		}
 		break;
-	case 53:
+	case 54:
+	case VK_NUMPAD6:
 		if (msg == WM_KEYDOWN) {
 			kd.num._6 = 1;
 		}
@@ -363,7 +262,8 @@ void callbackKeyEvent(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			kd.num._6 = 0;
 		}
 		break;
-	case 54:
+	case 55:
+	case VK_NUMPAD7:
 		if (msg == WM_KEYDOWN) {
 			kd.num._7 = 1;
 		}
@@ -371,7 +271,8 @@ void callbackKeyEvent(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			kd.num._7 = 0;
 		}
 		break;
-	case 55:
+	case 56:
+	case VK_NUMPAD8:
 		if (msg == WM_KEYDOWN) {
 			kd.num._8 = 1;
 		}
@@ -379,7 +280,8 @@ void callbackKeyEvent(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			kd.num._8 = 0;
 		}
 		break;
-	case 56:
+	case 57:
+	case VK_NUMPAD9:
 		if (msg == WM_KEYDOWN) {
 			kd.num._9 = 1;
 		}
@@ -611,7 +513,54 @@ void callbackKeyEvent(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			kd.def.rwin = 0;
 		}
 		break;
-
+	case VK_MULTIPLY:
+		if (msg == WM_KEYDOWN) {
+			kd.sig.multiply = 1;
+		}
+		else {
+			kd.sig.multiply = 0;
+		}
+		break;
+	case VK_ADD:
+		if (msg == WM_KEYDOWN) {
+			kd.sig.add = 1;
+		}
+		else {
+			kd.sig.add = 0;
+		}
+		break;
+	case VK_SEPARATOR:
+		if (msg == WM_KEYDOWN) {
+			kd.sig.separator = 1;
+		}
+		else {
+			kd.sig.separator = 0;
+		}
+		break;
+	case VK_SUBTRACT:
+		if (msg == WM_KEYDOWN) {
+			kd.sig.subtract = 1;
+		}
+		else {
+			kd.sig.subtract = 0;
+		}
+		break;
+	case VK_DECIMAL:
+		if (msg == WM_KEYDOWN) {
+			kd.sig.decimal = 1;
+		}
+		else {
+			kd.sig.decimal = 0;	
+		}
+		break;
+	case VK_DIVIDE:
+		if (msg == WM_KEYDOWN) {
+			kd.sig.divide = 1;
+		}
+		else {
+			kd.sig.divide = 0;
+		}
+		break;
 	default:
 		break;
 	}
@@ -623,66 +572,72 @@ void callbackKeyEvent(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	* 以下是对特定按键状态组合的反馈
 	*/
 
-	/*
-	* Ctrl + F + S + C : 切换全屏
-	*/
+	// Ctrl + F + S + C : 切换全屏
 	if (kd.def.ctrl == 1 and kd.chr.f == 1 and kd.chr.c == 1 and kd.chr.s == 1) {
-		if (fullscreenBool_judge) {
-			SetWindowLongPtr(hWnd, GWL_STYLE, windowStyleLastDword_tempstore);
-			SetWindowPos(hWnd, HWND_TOPMOST,
-				windowRectangleLastRect_tempstore.left,
-				windowRectangleLastRect_tempstore.top,
-				windowRectangleLastRect_tempstore.right - windowRectangleLastRect_tempstore.left,
-				windowRectangleLastRect_tempstore.bottom - windowRectangleLastRect_tempstore.top,
-				NULL);
-			fullscreenBool_judge = false;
-		}
-		else {
-			windowStyleLastDword_tempstore = GetWindowLong(hWnd, GWL_STYLE);
-			GetWindowRect(hWnd, &windowRectangleLastRect_tempstore);
-			SetWindowLongPtr(hWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW | WS_VISIBLE);
-			SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, fullscreenMaxWidthInt_store, fullscreenMaxHeightInt_store, SWP_FRAMECHANGED);
-			fullscreenBool_judge = true;
-		}
-		PostMessage(MainhWnd, WM_PAINT, 0, 0);
+		FullscreenStatus = !FullscreenStatus;
+		//repaint(hWnd);
 	}
-	/*
-	* Ctrl + A + E + X : 退出
-	*/
-	else if (kd.def.ctrl == 1 and kd.chr.a == 1 and kd.chr.e == 1 and kd.chr.x == 1) {
+	// Ctrl + A + E + X : 退出
+	else if (kd.def.ctrl == 1 and kd.def.menu == 1 and kd.chr.a == 1 and kd.chr.e == 1 and kd.chr.x == 1) {
 		PostMessage(MainhWnd, WM_DESTROY, 0, 0);
+		PostQuitMessage(0);
 	}
-	/*
-	* Ctrl + S + C + B : 黑屏
-	*/
+	// Ctrl + S + C + B : 黑屏
 	else if (kd.def.ctrl == 1 and kd.chr.s == 1 and kd.chr.c == 1 and kd.chr.b == 1) {
-		if (windowGUIStatus_tempstore != EK_GUI_BLACK) {
-			windowGUIStatus_tempstore = EK_GUI_BLACK;
-			windowGUIAntiBlack_tempstore = windowGUIStatusLast_tempstore;
+		if (GuiDisplay != EK_GUI_BLACK) {
+			GuiDisplay = EK_GUI_BLACK;
+			GuiDisplay_PrevBlack = GuiDisplay_Prev;
 		}
 		else {
-			windowGUIStatus_tempstore = windowGUIAntiBlack_tempstore;
+			GuiDisplay = GuiDisplay_PrevBlack;
 		}
-		RECT temp_rect;
-		GetWindowRect(hWnd, &temp_rect);
-		PostMessage(MainhWnd, WM_PAINT, 0, 0);
-		SetWindowPos(hWnd, HWND_TOPMOST,
-			fullscreenMaxWidthInt_store,
-			fullscreenMaxHeightInt_store,
-			temp_rect.right - temp_rect.left,
-			temp_rect.bottom - temp_rect.top,
-			NULL);
-		PostMessage(MainhWnd, WM_PAINT, 0, 0);
-		SetWindowPos(hWnd, HWND_TOPMOST,
-			temp_rect.left,
-			temp_rect.top,
-			temp_rect.right - temp_rect.left,
-			temp_rect.bottom - temp_rect.top,
-			NULL);
-		PostMessage(MainhWnd, WM_PAINT, 0, 0);
 	}
-	else {
-
+	else if (kd.def.ctrl == 0 and kd.def.lwin == 0 and kd.def.rwin == 0 and kd.def.menu == 0) {
+		按键窗口个性化();
 	}
+		return;
 }
 
+void 按键窗口个性化() {
+	switch (GuiDisplay) {
+	case EK_GUI_STARTER:
+		if (kd.chr.s == 1) {
+			GuiDisplay = EK_GUI_HOME;
+		}
+		else if (kd.chr.d == 1) {
+			GuiDisplay = EK_GUI_WINDOW;
+		}
+		else if (kd.chr.f == 1) {
+			GuiDisplay = EK_GUI_STARTER;
+		}
+		else {
+		}
+		break;
+	case EK_GUI_WINDOW:
+		if (kd.chr.q == 1) {
+			GuiDisplay = EK_GUI_STARTER;
+		}
+		break;
+	case EK_GUI_HOME:
+		if (kd.chr.q == 1) {
+			GuiDisplay = EK_GUI_STARTER;
+		}
+		break;
+	default:
+		break;
+	}
+	PostMessage(MainhWnd, WM_PAINT, 0, 0);
+	return;
+}
+
+void callbackMouseEvent(HWND hWnd, UINT message, WPARAM w, LPARAM l) {
+	switch (w)
+	{
+
+	case WM_MOUSEMOVE:
+	default:
+		DefWindowProc(hWnd, message, w, l);
+		break;
+	}
+	return;
+}

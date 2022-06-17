@@ -33,16 +33,13 @@
     <ClInclude Include="Sub_Hook_Proc.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="PreSub_Global_Def.h">
+    <ClInclude Include="Pre_Global_Def.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Sub_Catcher_Proc.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Sub_Printer_Proc.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Sub_Controll_Proc.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -63,5 +60,16 @@
     <Image Include="CppWindowTool.ico">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="bg.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="bg.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="文本.txt">
+      <Filter>资源文件</Filter>
+    </Text>
   </ItemGroup>
 </Project>
