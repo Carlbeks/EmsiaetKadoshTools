@@ -7,6 +7,7 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 #include <stdio.h>
+#include <windowsx.h>
 
 #pragma comment(lib,"d3d9.lib")
 #pragma comment(lib,"C:\\Program Files (x86)\\DirectX9\\Lib\\x64\\d3dx9.lib")
@@ -146,22 +147,14 @@ struct KEYDOWN {
 	};
 	SIGN sig;
 };
-struct BUTTON {
-	struct STARTER {
-		HWND		Home;
-		HWND		Normal;
-	};
-	STARTER __STARTER;
-	struct WINDOW {
-		HWND		BACKtoSTART;
-
-	};
-	WINDOW __WINDOW;
-	struct HOME {
-		HWND		BACKtoSTART;
-
-	};
-	HOME __HOME;
+struct vertex2D {
+	FLOAT x, y, z, rhw;
+	DWORD color;
+};
+struct vector {
+	float x;
+	float y;
+	float z;
 };
 
 
@@ -173,15 +166,20 @@ const int	SCREEN_HEIGHT = GetSystemMetrics(SM_CYSCREEN);		/* È«ÆÁÊ±´°¿ÚµÄ×î´ó¸ß¶
 // PreDef Global Printer   @ Sub_Printer_Proc
 #ifndef EMSIAETKADOSH_GRAND
 #define EMSIAETKADOSH_GRAND 0
-#define EK_GUI_STARTER			1				/*½çÃæ²ÎÊý£º¿ªÊ¼½çÃæ*/
-#define EK_GUI_WINDOW			2				/*½çÃæ²ÎÊý£º´°¿Ú½çÃæ*/
-#define EK_GUI_HOME				3				/*½çÃæ²ÎÊý£º¼ÒµÄ½çÃæ */
-#define EK_GUI_BLACK			-1				/*½çÃæ²ÎÊý£ººÚÆÁ½çÃæ*/
-#define EK_GUIBUTTON_NORMAL		101				/*°´Å¥²ÎÊý£º¿ªÊ¼³£¹æ*/
-#define EK_GUIBUTTON_HOME		102				/*°´Å¥²ÎÊý£º¿ªÊ¼µÄ¼Ò*/
 #define SAFE_RELEASE(pointer)	{ if(pointer) { (pointer)->Release(); (pointer) = NULL; } }
-#endif // !EMSIAETKADOSH_GRAND
+#define D3DFVF_VERTEX (D3DFVF_XYZRHW|D3DFVF_DIFFUSE)/*¾­¹ý¶¥µã±ä»»¡¢Âþ·´Éä*/
 
+#define EK_VECTOR_AD			2
+#define EK_VECTOR_XY			1
+
+#define EK_GUI_START 1
+
+#define EK_BUTTONSTYLE_FOCUS_GROW 1
+#define EK_BUTTONSTYLE_FOCUS_FRAME 2
+#define EK_BUTTONSTYLE_FOCUS_CLRCHANGE 3
+#define EK_BUTTONSTYLE_CLICK_DIMINISH 1
+#define EK_BUTTONSTYLE_CLICK_FRAME 2
+#endif // !EMSIAETKADOSH_GRAND
 
 
 //
@@ -195,23 +193,27 @@ bool					ReqRepaint = true;									// ÊÇ·ñÐèÒªÖØ¸´ÖØ»æ
 // Sub_Callback_Proc
 bool					FullscreenStatus;
 DWORD					WindowStyle_Prev;									/* È«ÆÁ±£Áô´°¿ÚÊ±µÄ¾ØÐÎ				*/
-RECT					WindowRectangle_Prev;								/* È«ÆÁ±£Áô´°¿ÚÊ±µÄ¾ØÐÎ				*/
+RECT					WindowRectangle_PrevFsc;							/* È«ÆÁ±£Áô´°¿ÚÊ±µÄ¾ØÐÎ				*/
 RECT					WindowRectangle_Present;							/* ÈÎºÎÊ±¿Ì´°¿ÚÔÚÆÁÄ»ÉÏµÄ¾ØÐÎ			*/
-RECT					GuiRectangle_Present;								/* ÈÎºÎÊ±¿Ì´°¿ÚÔÚ´°¿ÚÉÏµÄ¾ØÐÎ*/
+RECT					GuiRectangle_Previous;								/* ¿Í»§Çø¸Ä±ä´óÐ¡Ö®Ç°ÔÚÆÁÄ»ÉÏµÄ¾ØÐÎ	*/
+RECT					GuiRectangle_Present;								/* ÈÎºÎÊ±¿Ì¿Í»§ÇøÔÚ¿Í»§ÇøÉÏµÄ¾ØÐÎ		*/
 // Sub_Hook_Proc
 HOOKMSG					hookmsg;											/* »Øµ÷º¯ÊýÖÐÊä³öµÄÏûÏ¢ÄÚÈÝ£¨²¢Î´ÆôÓÃ£©	*/
-HOOKMSG					hoommsg;											/* »Øµ÷º¯ÊýÖÐÊä³öµÄÏûÏ¢ÄÚÈÝ£¨²¢Î´ÆôÓÃ£©	*/
 KEYDOWN					kd;													/* »Øµ÷º¯ÊýÖÐµ÷ÓÃµÄ°´¼ü×´Ì¬			*/
 HHOOK					hook;
 HHOOK					hoom;
 // Sub_Printer_Proc
-int						GuiDisplay = EK_GUI_STARTER;
-int						GuiDisplay_Prev = EK_GUI_STARTER;
+int						GuiDisplay_Present = EK_GUI_START;
 int						GuiDisplay_PrevBlack;
+bool					PrintInitReq = true;
 float					fps;
 wchar_t					fpsString[50];
-ID3DXFont*				d3dFontPointer = NULL;								/* D3D×ÖÌåÖ¸Õë						*/
+ID3DXFont*				d3dFontPointer_XiaoWeiRuanYaHei = NULL;				/* D3D×ÖÌåÖ¸Õë						*/
+ID3DXFont*				d3dFontPointer_DaWeiRuanYaHei = NULL;
 LPDIRECT3DDEVICE9		d3dDevicePointer = NULL;							/* D3DÉè±¸Ö¸Õë						*/
+LPDIRECT3DVERTEXBUFFER9 d3dVertexPointer = NULL;
+LPDIRECT3DINDEXBUFFER9	d3dIndexPointer = NULL;
+POINT					MousePosition = { 0 };
 
 // Sub_Catcher_Proc
 HWND*		AllhWnd;
@@ -220,11 +222,8 @@ HWND*		AllhWnd;
 // È«¾Öº¯Êý
 //
 LRESULT CALLBACK	callbackHook(int, WPARAM, LPARAM);
-void				sethook();
-void				sethookEx();
+LRESULT CALLBACK	callbackHoom(int, WPARAM, LPARAM);
 void				callbackKeyEvent(HWND, UINT, WPARAM, LPARAM);
-void				callbackMouseEvent(HWND, UINT, WPARAM, LPARAM);
-void				°´¼ü´°¿Ú¸öÐÔ»¯();
 
 
 

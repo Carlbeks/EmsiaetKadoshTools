@@ -24,35 +24,17 @@
     <ClInclude Include="Resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CppWindowTool.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Sub_Callback_Proc.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Sub_Hook_Proc.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Pre_Global_Def.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Sub_Catcher_Proc.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Sub_Printer_Proc.h">
+    <ClInclude Include="WindowsProject1.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CppWindowTool.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="源.cpp">
+    <ClCompile Include="WindowsProject1.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="CppWindowTool.rc">
+    <ResourceCompile Include="WindowsProject1.rc">
       <Filter>资源文件</Filter>
     </ResourceCompile>
   </ItemGroup>
@@ -60,19 +42,8 @@
     <Image Include="small.ico">
       <Filter>资源文件</Filter>
     </Image>
-    <Image Include="CppWindowTool.ico">
+    <Image Include="WindowsProject1.ico">
       <Filter>资源文件</Filter>
     </Image>
-    <Image Include="bg.png">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="bg.bmp">
-      <Filter>资源文件</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="文本.txt">
-      <Filter>资源文件</Filter>
-    </Text>
   </ItemGroup>
 </Project>

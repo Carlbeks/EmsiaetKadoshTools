@@ -271,7 +271,7 @@ LRESULT CALLBACK callback(int nCode, WPARAM w, LPARAM l) {
 	//DWORD x = T->vkCode;
 	//int c = (int)x;
 	//recognize(c, w);
-	PostMessage(HWND_TOPMOST, nCode, w, l);
+	PostMessage(HWND_BROADCAST, nCode, w, l);
 	return 1;
 }
 /*

@@ -26,8 +26,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     // TODO: 在此处放置代码。
 
+
     // 初始化全局字符串
     MyRegisterClass(hInstance);
+
 
     // 执行应用程序初始化:
     if (!InitInstance (hInstance, nCmdShow))
@@ -43,12 +45,67 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
 
+    GetWindowRect(MainhWnd, &WindowRectangle_PrevFsc);
+    GetWindowRect(MainhWnd, &WindowRectangle_Present);
+    GetClientRect(MainhWnd, &GuiRectangle_Present);
+    GetClientRect(MainhWnd, &GuiRectangle_Previous);
+    FullscreenStatus = false;
+    ShowWindow(MainhWnd, nCmdShow);
+    UpdateWindow(MainhWnd);
+
+    std::thread setWindowTop(setTopEx, MainhWnd);
+    setWindowTop.detach();
+    //std::thread setGlobalHook(sethookEx);
+    //setGlobalHook.detach();
+
+
+    MSG msg = { 0 };
+    //hook = SetWindowsHookEx(WH_KEYBOARD_LL, callbackHook, 0, 0);
+    //hoom = SetWindowsHookEx(WH_MOUSE_LL, callbackHoom, 0, 0);
+    ULONGLONG Systime_Prev_temp = GetTickCount64();
+    Systime_Prev = GetTickCount64();
+    d3d9::GuiPrinterStartInit();
+    while (msg.message != WM_QUIT) {
+        //
+        // 开始循环
+        // 消息循环:
+        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+        // 程序循环:
+        Systime = GetTickCount64();
+        if (Systime - Systime_Prev >= 15) {
+            if (GuiRectangle_Present.right != GuiRectangle_Previous.right or GuiRectangle_Present.bottom != GuiRectangle_Previous.bottom) {
+                SAFE_RELEASE(d3dFontPointer_DaWeiRuanYaHei);
+                SAFE_RELEASE(d3dFontPointer_XiaoWeiRuanYaHei);
+                SAFE_RELEASE(d3dDevicePointer);
+                d3d9::Init(MainhWnd);
+                d3d9::GuiPrinterStartInit();
+                GetClientRect(MainhWnd, &GuiRectangle_Previous);
+            }
+            d3d9::GuiPrinterStart();
+            //UnhookWindowsHookEx(hook);
+            //UnhookWindowsHookEx(hoom);
+            //hook = SetWindowsHookEx(WH_KEYBOARD_LL, callbackHook, 0, 0);
+            //hoom = SetWindowsHookEx(WH_MOUSE_LL, callbackHoom, 0, 0);
+            Systime_Prev = GetTickCount64();
+        }
+        if (Systime - Systime_Prev_temp > 4000) {
+            break;
+        }
+    }
+    //UnhookWindowsHookEx(hook);
+    //UnhookWindowsHookEx(hoom);
+    //hook = SetWindowsHookEx(WH_KEYBOARD_LL, callbackHook, 0, 0);
     //
     // 主循环:
     //
-    MSG msg = { 0 };
-    hook = SetWindowsHookEx(WH_KEYBOARD_LL, callbackHook, 0, 0);
-    //hoom = SetWindowsHookEx(WH_MOUSE_LL, callbackHoom, 0, 0);
+    SAFE_RELEASE(d3dFontPointer_DaWeiRuanYaHei);
+    SAFE_RELEASE(d3dFontPointer_XiaoWeiRuanYaHei);
+    SAFE_RELEASE(d3dDevicePointer);
+    d3d9::Init(MainhWnd);
+    Systime_Prev = GetTickCount64();
     while (msg.message != WM_QUIT) {
         // 消息循环:
         if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
@@ -57,28 +114,32 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
         // 程序循环:
         Systime = GetTickCount64();
-        GetClientRect(MainhWnd, &GuiRectangle_Present);
-        if (Systime - Systime_Prev >= 15) {
-            UnhookWindowsHookEx(hook);
-            //UnhookWindowsHookEx(hoom);
-            hook = SetWindowsHookEx(WH_KEYBOARD_LL, callbackHook, 0, 0);
-            //hoom = SetWindowsHookEx(WH_MOUSE_LL, callbackHoom, 0, 0);
-            if (ReqRepaint){
-                d3d9::GuiPrinter();
-                InvalidateRect(MainhWnd, &GuiRectangle_Present, false);
-                UpdateWindow(MainhWnd);
+        if (Systime - Systime_Prev >= 10) {
+            if (GuiRectangle_Present.right != GuiRectangle_Previous.right or GuiRectangle_Present.bottom != GuiRectangle_Previous.bottom) {
+                SAFE_RELEASE(d3dFontPointer_DaWeiRuanYaHei);
+                SAFE_RELEASE(d3dFontPointer_XiaoWeiRuanYaHei);
+                SAFE_RELEASE(d3dDevicePointer);
+                d3d9::Init(MainhWnd);
+                GetClientRect(MainhWnd, &GuiRectangle_Previous);
+                PrintInitReq = true;
             }
+            d3d9::GuiPrinter();
+            //UnhookWindowsHookEx(hook);
+            //UnhookWindowsHookEx(hoom);
+            //hook = SetWindowsHookEx(WH_KEYBOARD_LL, callbackHook, 0, 0);
+            //hoom = SetWindowsHookEx(WH_MOUSE_LL, callbackHoom, 0, 0);
             Systime_Prev = GetTickCount64();
         }
     }
-
     //
     // 清理资源:
     //
     UnregisterClass(L"EmsiaetKadosh's Desktop Tool", hInstance);
-    
-    UnhookWindowsHookEx(hook);
-    UnhookWindowsHookEx(hoom);
+    SAFE_RELEASE(d3dFontPointer_DaWeiRuanYaHei);
+    SAFE_RELEASE(d3dFontPointer_XiaoWeiRuanYaHei);
+    SAFE_RELEASE(d3dDevicePointer);
+    //UnhookWindowsHookEx(hook);
+    //UnhookWindowsHookEx(hoom);
     return (int) msg.wParam;
 }
 
@@ -127,18 +188,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     {
         return FALSE;
     }
-    GetWindowRect(MainhWnd, &WindowRectangle_Prev);
-    FullscreenStatus = false;
-    ShowWindow(MainhWnd, nCmdShow);
-    UpdateWindow(MainhWnd);
-    //置顶
-    //std::thread setWindowTop(setTopEx, MainhWnd);
-    //setWindowTop.detach();
-    // 添加自定义动作
-    //std::thread setGlobalHook(sethookEx);
-    //setGlobalHook.detach();
-    // 添加自定义动作
-    // 初始化Direct3D接口对象
 
     return TRUE;
 }
@@ -197,19 +246,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_KEYUP:
         callbackKeyEvent(MainhWnd, message, wParam, lParam);
         break;
-    case WM_LBUTTONDBLCLK:
-    case WM_LBUTTONDOWN:
-    case WM_LBUTTONUP:
-    case WM_MBUTTONDBLCLK:
-    case WM_MBUTTONDOWN:
-    case WM_MBUTTONUP:
-    case WM_RBUTTONDBLCLK:
-    case WM_RBUTTONDOWN:
-    case WM_RBUTTONUP:
-    case WM_MOUSEMOVE:
-    case WM_MOUSEWHEEL:
-        callbackMouseEvent(MainhWnd, message, wParam, lParam);
-        break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
@@ -237,30 +273,36 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 void setTopEx(HWND hWnd) {
-    int set = 0;
+    bool set_temp = false;
     while (true) {
+        GetWindowRect(hWnd, &WindowRectangle_Present);
+        GetClientRect(hWnd, &GuiRectangle_Present);
+        GetCursorPos(&MousePosition);
         if (FullscreenStatus) {
-            if (set){
-                GetWindowRect(hWnd, &WindowRectangle_Prev);
+            if (set_temp){
+                GetWindowRect(hWnd, &WindowRectangle_PrevFsc);
+                GuiRectangle_Present.right = SCREEN_WIDTH;
+                GuiRectangle_Present.bottom = SCREEN_HEIGHT;
             }
             SetWindowLongPtr(hWnd, GWL_STYLE, WS_VISIBLE);
-            SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SWP_FRAMECHANGED);
-            set = 0;
+            SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SWP_NOREDRAW);
+            set_temp = false;
         }
         else {
-            if (set) {}
+            GetClientRect(MainhWnd, &GuiRectangle_Present);
+            if (set_temp) {}
             else {
                 SetWindowLongPtr(hWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW | WS_VISIBLE);
-                SetWindowPos(hWnd, HWND_TOPMOST,
-                    WindowRectangle_Prev.left,
-                    WindowRectangle_Prev.top,
-                    WindowRectangle_Prev.right - WindowRectangle_Prev.left,
-                    WindowRectangle_Prev.bottom - WindowRectangle_Prev.top,
+                SetWindowPos(hWnd, HWND_TOP,
+                    WindowRectangle_PrevFsc.left,
+                    WindowRectangle_PrevFsc.top,
+                    WindowRectangle_PrevFsc.right - WindowRectangle_PrevFsc.left,
+                    WindowRectangle_PrevFsc.bottom - WindowRectangle_PrevFsc.top,
                     NULL);
-                GetWindowRect(hWnd, &WindowRectangle_Prev);
-                set = 1;
+                set_temp = true;
             }
         }
         Sleep(1);
     }
+    return;
 }

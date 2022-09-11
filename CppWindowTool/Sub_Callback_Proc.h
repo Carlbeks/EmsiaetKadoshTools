@@ -572,72 +572,14 @@ void callbackKeyEvent(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	* 以下是对特定按键状态组合的反馈
 	*/
 
-	// Ctrl + F + S + C : 切换全屏
-	if (kd.def.ctrl == 1 and kd.chr.f == 1 and kd.chr.c == 1 and kd.chr.s == 1) {
+	// Win + F + S + C : 切换全屏
+	if (kd.def.lwin == 1 and kd.chr.f == 1 and kd.chr.c == 1 and kd.chr.s == 1) {
 		FullscreenStatus = !FullscreenStatus;
-		//repaint(hWnd);
 	}
-	// Ctrl + A + E + X : 退出
-	else if (kd.def.ctrl == 1 and kd.def.menu == 1 and kd.chr.a == 1 and kd.chr.e == 1 and kd.chr.x == 1) {
+	// Win + A + E + X : 退出
+	else if (kd.def.lwin == 1 and kd.chr.a == 1 and kd.chr.e == 1 and kd.chr.x == 1) {
 		PostMessage(MainhWnd, WM_DESTROY, 0, 0);
 		PostQuitMessage(0);
 	}
-	// Ctrl + S + C + B : 黑屏
-	else if (kd.def.ctrl == 1 and kd.chr.s == 1 and kd.chr.c == 1 and kd.chr.b == 1) {
-		if (GuiDisplay != EK_GUI_BLACK) {
-			GuiDisplay = EK_GUI_BLACK;
-			GuiDisplay_PrevBlack = GuiDisplay_Prev;
-		}
-		else {
-			GuiDisplay = GuiDisplay_PrevBlack;
-		}
-	}
-	else if (kd.def.ctrl == 0 and kd.def.lwin == 0 and kd.def.rwin == 0 and kd.def.menu == 0) {
-		按键窗口个性化();
-	}
 		return;
-}
-
-void 按键窗口个性化() {
-	switch (GuiDisplay) {
-	case EK_GUI_STARTER:
-		if (kd.chr.s == 1) {
-			GuiDisplay = EK_GUI_HOME;
-		}
-		else if (kd.chr.d == 1) {
-			GuiDisplay = EK_GUI_WINDOW;
-		}
-		else if (kd.chr.f == 1) {
-			GuiDisplay = EK_GUI_STARTER;
-		}
-		else {
-		}
-		break;
-	case EK_GUI_WINDOW:
-		if (kd.chr.q == 1) {
-			GuiDisplay = EK_GUI_STARTER;
-		}
-		break;
-	case EK_GUI_HOME:
-		if (kd.chr.q == 1) {
-			GuiDisplay = EK_GUI_STARTER;
-		}
-		break;
-	default:
-		break;
-	}
-	PostMessage(MainhWnd, WM_PAINT, 0, 0);
-	return;
-}
-
-void callbackMouseEvent(HWND hWnd, UINT message, WPARAM w, LPARAM l) {
-	switch (w)
-	{
-
-	case WM_MOUSEMOVE:
-	default:
-		DefWindowProc(hWnd, message, w, l);
-		break;
-	}
-	return;
 }

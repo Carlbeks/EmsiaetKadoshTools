@@ -24,35 +24,32 @@
     <ClInclude Include="Resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CppWindowTool.h">
+    <ClInclude Include="CppWindowTool-pre2.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Sub_Callback_Proc.h">
+    <ClInclude Include="MainProgress.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Sub_Hook_Proc.h">
+    <ClInclude Include="PreGlobal.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Pre_Global_Def.h">
+    <ClInclude Include="PaintProgress.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Sub_Catcher_Proc.h">
+    <ClInclude Include="WindowIns.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Sub_Printer_Proc.h">
+    <ClInclude Include="EmsiaetKadosh.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CppWindowTool.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="源.cpp">
+    <ClCompile Include="CppWindowTool-pre2.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="CppWindowTool.rc">
+    <ResourceCompile Include="CppWindowTool-pre2.rc">
       <Filter>资源文件</Filter>
     </ResourceCompile>
   </ItemGroup>
@@ -60,18 +57,15 @@
     <Image Include="small.ico">
       <Filter>资源文件</Filter>
     </Image>
-    <Image Include="CppWindowTool.ico">
+    <Image Include="CppWindowTool-pre2.ico">
       <Filter>资源文件</Filter>
     </Image>
-    <Image Include="bg.png">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="bg.bmp">
+    <Image Include="..\CppWindowTool\bg.bmp">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="文本.txt">
+    <Text Include="user.ekdt">
       <Filter>资源文件</Filter>
     </Text>
   </ItemGroup>
