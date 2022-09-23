@@ -18,44 +18,16 @@
     <ClInclude Include="framework.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="EmsiaetKadoshDesktopTool-pre3.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="EmsiaetKadosh.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="PreGlobal.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Sub_MainProcess.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Sub_Hook.h">
+    <ClInclude Include="pch.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="EmsiaetKadoshDesktopTool-pre3.cpp">
+    <ClCompile Include="dllmain.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="EmsiaetKadoshDesktopTool-pre3.rc">
-      <Filter>资源文件</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="small.ico">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="EmsiaetKadoshDesktopTool-pre3.ico">
-      <Filter>资源文件</Filter>
-    </Image>
+    <ClCompile Include="pch.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

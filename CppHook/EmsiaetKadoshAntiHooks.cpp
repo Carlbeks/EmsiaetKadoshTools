@@ -9,8 +9,13 @@
 #pragma warning(disable:4311)
 
 std::string string;
-bool r_command_bool=true;
-bool r1_command_bool=false;
+bool isKill = true;
+bool r_command_bool = true;
+bool r1_command_bool = false;
+const int	_SCREEN_WIDTH = GetSystemMetrics(SM_CXSCREEN);
+const int	_SCREEN_HEIGHT = GetSystemMetrics(SM_CYSCREEN);
+#define SCREEN_WIDTH _SCREEN_WIDTH
+#define SCREEN_HEIGHT _SCREEN_HEIGHT
 std::string dec2hex(int i, int width)
 {
 	std::stringstream ioss;     //定义字符串流
@@ -242,7 +247,7 @@ void recognize(int c, WPARAM w) {
 			std::cout << "V";
 			string += "v";
 			break;
-		case 87 :
+		case 87:
 			std::cout << "W";
 			string += "w";
 			break;
@@ -262,16 +267,20 @@ void recognize(int c, WPARAM w) {
 			std::cout << "<UnknownKey>";
 			break;
 		}
-	std::cout << std::endl;
-	std::cout << " <commander> " << string << std::endl;
+		std::cout << std::endl;
+		std::cout << " <commander> " << string << std::endl;
 	}
 }
 LRESULT CALLBACK callback(int nCode, WPARAM w, LPARAM l) {
-	//KBDLLHOOKSTRUCT* T = (KBDLLHOOKSTRUCT*)l;
-	//DWORD x = T->vkCode;
-	//int c = (int)x;
-	//recognize(c, w);
-	PostMessage(HWND_BROADCAST, nCode, w, l);
+	if (nCode < 0 or nCode == HC_NOREMOVE) {
+		return CallNextHookEx(NULL, nCode, w, l);
+	}
+	std::cout << "Called back." << std::endl;
+	KBDLLHOOKSTRUCT* T = (KBDLLHOOKSTRUCT*)l;
+	DWORD x = T->vkCode;
+	int c = (int)x;
+	recognize(c, w);
+	//PostMessage(HWND_BROADCAST, w, ((KBDLLHOOKSTRUCT*)l)->vkCode, 0);
 	return 1;
 }
 /*
@@ -390,20 +399,87 @@ void EKHOOK() {
 }
 int main() {
 	EKHOOK();
-
 	HHOOK hook = ::SetWindowsHookEx(WH_KEYBOARD_LL, EmsiaetKadoshHooks, 0, 0);
 	MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0)) {
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
-
 	return 0;
 }
 */
+void input() {
+	std::string str;
+	std::cout << " >>> ";
+	std::cin >> str;
+	while (str != "/exit") {
+		if (str == "") {
+			isKill = !isKill;
+			if (isKill) {
+				std::cout << "isKill -> true" << std::endl;
+			}
+			else {
+				std::cout << "isKill -> false" << std::endl;
+			}
+		}
+		else if (str == "/off") {
+			if (isKill) {
+				isKill = false;
+				std::cout << "isKill -> false" << std::endl;
+			}
+			else {
+				std::cout << "isKill has been set to false." << std::endl;
+			}
+		}
+		else if (str == "/on") {
+			if (isKill) {
+				isKill = true;
+				std::cout << "isKill -> true" << std::endl;
+			}
+			else {
+				std::cout << "isKill has been set to true." << std::endl;
+			}
+		}
+		str = "";
+		std::cout << " >>> ";
+		std::cin >> str;
+	}
+}
 int main() {
+	HWND mythVirus = 0;
+	HWND test = 0;
+	//std::thread thr(input);
+	//thr.detach();
+	HHOOK hook = SetWindowsHookEx(WH_KEYBOARD_LL, callback, 0, 0);
+	std::cout << "hooked: " << hook << std::endl;
+	Sleep(60000);
+	UnhookWindowsHookEx(hook);
+	
+
 	while (true) {
 		HHOOK hook = SetWindowsHookEx(WH_KEYBOARD_LL, callback, 0, 0);
+		if (isKill) {
+			if (mythVirus) {
+				SetWindowPos(mythVirus, HWND_BOTTOM, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SWP_NOSENDCHANGING | SWP_HIDEWINDOW);
+			}
+			else {
+				mythVirus = FindWindow(NULL, L"屏幕广播");
+			}
+			if (test) {
+				SetWindowPos(test, HWND_BOTTOM, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SWP_NOSENDCHANGING | SWP_HIDEWINDOW);
+			}
+			else {
+				test = FindWindow(NULL, L"此电脑");
+			}
+		}
+		else {
+			if (test) {
+				SetWindowPos(test, HWND_NOTOPMOST, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SWP_NOSENDCHANGING | SWP_SHOWWINDOW);
+			}
+			else {
+				test = FindWindow(NULL, L"此电脑");
+			}
+		}
 		Sleep(10);
 		UnhookWindowsHookEx(hook);
 	}

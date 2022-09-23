@@ -1,12 +1,10 @@
 #pragma once
 
-
 #include <iostream>
 #include <mmsystem.h>
 #include <Windows.h>
 #include <stdio.h>
 #include <mutex>
-//#include <chrono>
 #pragma comment(lib,"winmm.lib")
 #pragma warning(disable:4996)
 
@@ -55,6 +53,22 @@
 #define CMD_BANBLOCK 3
 #define CMD_SHUTLOOP 4
 #endif // !IM_CMD
+#ifndef IM_ACT
+#define IM_ACT 2
+#ifndef ACT_MOUSE
+#define ACT_MOUSE 1
+#define MOUSE_L_D 1
+#define MOUSE_L_U 2
+#define MOUSE_R_D 3
+#define MOUSE_R_U 4
+#define MOUSE_M_D 5
+#define MOUSE_M_U 6
+#define MOUSE_SCROLL_D 7
+#define MOUSE_SCROLL_U 8
+#define MOUSE_ENTER 9
+#define MOUSE_LEAVE 10
+#endif // !ACT_MOUSE
+#endif // !IM_ACT
 #endif // !EMSIAETKADOSH_GRAND_IM
 
 
@@ -85,6 +99,7 @@ typedef unsigned __int64 un6;
 #define nMax 0b1111111111111111111111111111111111111111111111111111111111111111
 #define nMin 0b0000000000000000000000000000000000000000000000000000000000000000
 #define def(_Return_Type_,_pFunc_,_Parameters_) _Return_Type_(*_pFunc_)_Parameters_
+
 #endif // !EMSIAETKADOSH_GRAND_SIMPLIFY
 
 #define _in_ 
@@ -102,6 +117,8 @@ enum cmdtypeCMD {
 	CMD_stdout,CMD_stdin
 };
 C LOGGING{
+cpi:
+	std::mutex mutex_lock;
 cpo:
 	logrankLOG logrank = LOG_DEBUG;
 	FILE* SetLogFile(const c* name = R"(D:\EmsiaetKadosh\O\ProjectSaves\EKTools\EmsiaetKadoshDesktopTool-pre3\log.log)") {
@@ -109,6 +126,7 @@ cpo:
 		er freopen(name, "a+", stdout);
 	}
 	v Output(logrankLOG tgtlogrank, std::string content) {
+		mutex_lock.lock();
 		if (tgtlogrank >= logrank) {
 			switch (tgtlogrank)
 			{
@@ -150,9 +168,11 @@ cpo:
 				break;
 			}
 		}
+		mutex_lock.unlock();
 		er;
 	}
 	v SetOutputColor(logrankLOG tgtlogrank) {
+		mutex_lock.lock();
 		switch (tgtlogrank)
 		{
 		case LOG_ALL:
@@ -174,6 +194,8 @@ cpo:
 		default:
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 0b00000110); break;
 		}
+		mutex_lock.unlock();
+		er;
 	}
 } logging;
 v ShowCmd(cmdtypeCMD stdStatus) {
@@ -401,6 +423,11 @@ cpo:
 		}
 		er0;
 	}
+	v releaseAll() {
+		banlevel = INT_MAX;
+		release();
+		er;
+	}
 	n release(n sleeptime = 1) {
 		if (ifstop) {
 			ifloop = false;
@@ -470,7 +497,6 @@ cpo:
 cpi:
 	un3 posr = 0;
 	un3 posw = 0;
-	LOGGING loggingIn;
 	std::mutex mutex_lock_read;
 	std::mutex mutex_lock_write;
 	EKMSGBUFFER ekmsgs[256];
@@ -554,7 +580,6 @@ cpo:
 			ekmsg_logging_strings[posw] = new std::string;
 			*(ekmsg_logging_strings[posw]) = content;
 			ekmsgs[posw](IM_CMD, CMD_LOG, posw, logrank);
-			logging.Output(LOG_INFO, JoinString("Post", IntToString_OCT(posw)));
 			posw = (posw == 255) ? 0 : (posw + 1);
 		}
 		else {
@@ -629,7 +654,6 @@ cpo:
 		if (Proc(pekmsg->command, pekmsg->fmParam, pekmsg->idParam, pekmsg->ctParam)) {
 			FinalInnerMessage(pekmsg->command, pekmsg->fmParam, pekmsg->idParam, pekmsg->ctParam);
 		}
-		logging.Output(LOG_WARN, JoinString("Processing InnerMessage ",IntToString_OCT(posr)));
 		er;
 	}
 	v FinalInnerMessage(
@@ -644,7 +668,7 @@ cpo:
 			switch (_fmparam)
 			{
 			case CMD_LOG:
-				loggingIn.Output((logrankLOG)_ctparam, *ekmsg_logging_strings[_idparam]);
+				logging.Output((logrankLOG)_ctparam, *ekmsg_logging_strings[_idparam]);
 				delete ekmsg_logging_strings[_idparam];
 				break;
 			case CMD_STEP:
@@ -658,6 +682,9 @@ cpo:
 			default:
 				break;
 			}
+			break;
+		case IM_QUIT:
+			break;
 		default:
 			break;
 		}

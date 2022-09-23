@@ -97,7 +97,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
     //UnhookWindowsHookEx(hook);
     //UnhookWindowsHookEx(hoom);
-    //hook = SetWindowsHookEx(WH_KEYBOARD_LL, callbackHook, 0, 0);
+    hook = SetWindowsHookEx(WH_KEYBOARD_LL, callbackHook, 0, 0);
     //
     // 主循环:
     //
@@ -124,9 +124,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 PrintInitReq = true;
             }
             d3d9::GuiPrinter();
-            //UnhookWindowsHookEx(hook);
+            UnhookWindowsHookEx(hook);
             //UnhookWindowsHookEx(hoom);
-            //hook = SetWindowsHookEx(WH_KEYBOARD_LL, callbackHook, 0, 0);
+            hook = SetWindowsHookEx(WH_KEYBOARD_LL, callbackHook, 0, 0);
             //hoom = SetWindowsHookEx(WH_MOUSE_LL, callbackHoom, 0, 0);
             Systime_Prev = GetTickCount64();
         }
@@ -138,7 +138,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     SAFE_RELEASE(d3dFontPointer_DaWeiRuanYaHei);
     SAFE_RELEASE(d3dFontPointer_XiaoWeiRuanYaHei);
     SAFE_RELEASE(d3dDevicePointer);
-    //UnhookWindowsHookEx(hook);
+    UnhookWindowsHookEx(hook);
     //UnhookWindowsHookEx(hoom);
     return (int) msg.wParam;
 }

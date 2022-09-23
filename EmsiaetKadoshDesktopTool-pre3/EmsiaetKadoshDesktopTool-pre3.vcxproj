@@ -133,6 +133,7 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="PreGlobal.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="Sub_Hook.h" />
     <ClInclude Include="Sub_MainProcess.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>

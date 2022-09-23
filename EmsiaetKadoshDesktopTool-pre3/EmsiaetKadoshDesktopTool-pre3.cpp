@@ -19,17 +19,19 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 int __stdcall wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow) {
     ShowCmd(CMD_stdout);
-    logging.logrank = LOG_DEBUG;
+    logging.logrank = LOG_INFO;
     logging.Output(LOG_INFO, "EKDT started!");
 
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
     // TODO: 在此处放置代码。
-    std::thread testThread(f_InnerMessageLoop);
-    testThread.detach();
+    std::thread imThread(f_InnerMessageLoop);
+    imThread.detach();
     std::thread mainThread(f_MainLoop);
     mainThread.detach();
+    std::thread hookThread(f_HookLoop);
+    hookThread.detach();
 
     // 初始化全局字符串
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -47,7 +49,7 @@ int __stdcall wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_EMSIAETKADOSHDESKTOPTOOLPRE3));
 
-    MSG msg;
+    MSG msg = { 0 };
 
     // 主消息循环:
     logging.Output(LOG_INFO, "Starting message loop...");
@@ -65,12 +67,15 @@ int __stdcall wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 
     logging.Output(LOG_OFF, "Got WM_QUIT.");
     logging.Output(LOG_OFF, "Shutting down.");
-    logging.SetOutputColor(LOG_INFO);
     ifloopMain_temp = false;
-    while (!StepThreadBlocker.release())
+    ifloopHook_temp = false;
+    IsMainMessageLoopActive = false;
+    logging.SetOutputColor(LOG_INFO);
+    StepThreadBlocker.releaseAll();
     if (InnerMessage.isActive()) {
         InnerMessage.PostInnerMessage(IM_QUIT, 0, 0, 0);
     }
+    Sleep(1000);
     system("Pause");
 
     return (int) msg.wParam;
@@ -97,7 +102,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_EMSIAETKADOSHDESKTOPTOOLPRE3));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_EMSIAETKADOSHDESKTOPTOOLPRE3);
+    wcex.lpszMenuName   = 0;// MAKEINTRESOURCEW(IDC_EMSIAETKADOSHDESKTOPTOOLPRE3);
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -118,8 +123,12 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    MainhInstance = hInstance; // 将实例句柄存储在全局变量中
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+   TARGET_H = SCREEN_H / 2;
+   TARGET_W = max(SCREEN_W / 16, TARGET_H / 4);
+   POS_H = TARGET_H / 2;
+   HWND hWnd = CreateWindowW(szWindowClass, szTitle,
+       WS_VISIBLE | WS_BORDER | WS_DLGFRAME
+       , 0, 0, 300, 300, nullptr, nullptr, hInstance, nullptr);
    MainhWnd = hWnd;
 
    if (!hWnd)
@@ -148,47 +157,10 @@ __int64 __stdcall WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     std::string the_msg_str;
     switch (message)
     {
-    case WM_KEYDOWN:
-        the_msg_str = "GetMsg: WM_KEYDOWN";
-        logging.Output(LOG_ALL, the_msg_str);
-        EkmsgKeyStatus[wParam] = true;
-
-        // step mod
-        if (EkmsgKeyStatus[VK_RETURN]) {
-            EkmsgKeyStatus[VK_RETURN] = false;
-            InnerMessage.PostInnerMessage(IM_CMD, CMD_STEP, 0, 0);
-        }
-        if (EkmsgKeyStatus[VK_BACK]) {
-            EkmsgKeyStatus[VK_BACK] = false;
-            InnerMessage.PostInnerMessage(IM_CMD, CMD_BANBLOCK, 0, 0);
-        }
-        if (EkmsgKeyStatus[VK_ESCAPE]) {
-            EkmsgKeyStatus[VK_ESCAPE] = false;
-            InnerMessage.PostInnerMessage(IM_CMD, CMD_SHUTLOOP, 0, 0);
-            ifloopMain_temp = false;
-        }
-
-        break;
     case WM_SYSKEYDOWN:
         the_msg_str = "GetMsg: WM_SYSKEYDOWN";
         logging.Output(LOG_ALL, the_msg_str);
         EkmsgKeyStatus[wParam] = true;
-
-        // step mod
-        if (EkmsgKeyStatus[VK_RETURN]) {
-            EkmsgKeyStatus[VK_RETURN] = false;
-            InnerMessage.PostInnerMessage(IM_CMD, CMD_STEP, 0, 0);
-        }
-        if (EkmsgKeyStatus[VK_BACK]) {
-            EkmsgKeyStatus[VK_BACK] = false;
-            InnerMessage.PostInnerMessage(IM_CMD, CMD_BANBLOCK, 0, 0);
-        }
-        if (EkmsgKeyStatus[VK_ESCAPE]) {
-            EkmsgKeyStatus[VK_ESCAPE] = false;
-            InnerMessage.PostInnerMessage(IM_CMD, CMD_SHUTLOOP, 0, 0);
-            ifloopMain_temp = false;
-        }
-
         break;
     case WM_KEYUP:
         the_msg_str = "GetMsg: WM_KEYUP";
@@ -211,6 +183,7 @@ __int64 __stdcall WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         logging.Output(LOG_ALL, the_msg_str);
         EkmsgMouseClicked[0] = false;
         GetCursorClientPosition(hWnd, &EkmsgCursorPosition);
+        InnerMessage.PostInnerMessage(IM_ACT, ACT_MOUSE, MOUSE_L_U, 0);
         break;
     case WM_MBUTTONDOWN:
         the_msg_str = "GetMsg: WM_MBUTTONDOWN";
@@ -229,6 +202,7 @@ __int64 __stdcall WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         logging.Output(LOG_ALL, the_msg_str);
         EkmsgMouseClicked[2] = true;
         GetCursorClientPosition(hWnd, &EkmsgCursorPosition);
+        InnerMessage.PostInnerMessage(IM_ACT, ACT_MOUSE, MOUSE_R_D, 0);
         break;
     case WM_RBUTTONUP:
         the_msg_str = "GetMsg: WM_RBUTTONUP";
@@ -237,36 +211,54 @@ __int64 __stdcall WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         GetCursorClientPosition(hWnd, &EkmsgCursorPosition);
         break;
     case WM_MOUSEMOVE:
+        if (IsMouseOut) {
+            ZeroMemory(&MouseEvent, sizeof(TRACKMOUSEEVENT));
+            MouseEvent.cbSize = sizeof(TRACKMOUSEEVENT);
+
+            MouseEvent.hwndTrack = MainhWnd;
+            MouseEvent.dwFlags = TME_LEAVE;
+            MouseEvent.dwHoverTime = HOVER_DEFAULT;
+
+            TrackMouseEvent(&MouseEvent);
+            IsMouseOut = false;
+        }
         the_msg_str = "GetMsg: WM_MOUSEMOVE";
         logging.Output(LOG_ALL, the_msg_str);
         GetCursorClientPosition(hWnd, &EkmsgCursorPosition);
+        POS_W = SHOW_W;
         break;
-    case WM_COMMAND:
-        the_msg_str = "GetMsg: WM_COMMAND";
+    case WM_MOUSELEAVE:
+        POS_W = HIDE_W - TARGET_W;
+        IsMouseOut = true;
+        the_msg_str = "GetMsg: WM_MOUSELEAVE";
         logging.Output(LOG_ALL, the_msg_str);
-        {
-            int wmId = LOWORD(wParam);
-            // 分析菜单选择:
-            switch (wmId)
-            {
-            case IDM_ABOUT:
-                DialogBox(MainhInstance, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-                break;
-            case IDM_EXIT:
-                DestroyWindow(hWnd);
-                break;
-            default:
-                return DefWindowProc(hWnd, message, wParam, lParam);
-            }
-        }
+        InnerMessage.PostInnerMessage(IM_ACT, ACT_MOUSE, MOUSE_LEAVE, 0);
         break;
+    //case WM_COMMAND:
+    //    the_msg_str = "GetMsg: WM_COMMAND";
+    //    logging.Output(LOG_ALL, the_msg_str);
+    //    {
+    //        int wmId = LOWORD(wParam);
+    //        // 分析菜单选择:
+    //        switch (wmId)
+    //        {
+    //        case IDM_ABOUT:
+    //            DialogBox(MainhInstance, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+    //            break;
+    //        case IDM_EXIT:
+    //            DestroyWindow(hWnd);
+    //            break;
+    //        default:
+    //            return DefWindowProc(hWnd, message, wParam, lParam);
+    //        }
+    //    }
+    //    break;
     case WM_PAINT:
         the_msg_str = "GetMsg: WM_PAINT";
         logging.Output(LOG_ALL, the_msg_str);
         {
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: 在此处添加使用 hdc 的任何绘图代码...
             EndPaint(hWnd, &ps);
         }
         break;
@@ -276,10 +268,10 @@ __int64 __stdcall WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         PostQuitMessage(0);
         break;
     default:
-        char the_msg_char[16];
-        itoa(message, the_msg_char, 16);
-        the_msg_str = the_msg_char;
-        logging.Output(LOG_ALL, JoinString("GetMsg: ", the_msg_str));
+        //char the_msg_char[16];
+        //itoa(message, the_msg_char, 16);
+        //the_msg_str = the_msg_char;
+        //logging.Output(LOG_ALL, JoinString("GetMsg: ", the_msg_str));
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
 

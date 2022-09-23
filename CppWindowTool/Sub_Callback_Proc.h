@@ -576,7 +576,7 @@ void callbackKeyEvent(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	if (kd.def.lwin == 1 and kd.chr.f == 1 and kd.chr.c == 1 and kd.chr.s == 1) {
 		FullscreenStatus = !FullscreenStatus;
 	}
-	// Win + A + E + X : ÍË³ö
+	// Win + A + E + X : ÍË³öe
 	else if (kd.def.lwin == 1 and kd.chr.a == 1 and kd.chr.e == 1 and kd.chr.x == 1) {
 		PostMessage(MainhWnd, WM_DESTROY, 0, 0);
 		PostQuitMessage(0);
