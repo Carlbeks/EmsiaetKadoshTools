@@ -99,6 +99,17 @@ v f_InnerMessageLoop() {
 
 bool ifloopHook_temp = true;
 v f_HookLoop() {
+	logging.Output(LOG_INFO, "f_HookLoop start.");
+	def(__int64, __stdcall proc, (n, WPARAM, LPARAM)) = [](n nc, WPARAM w, LPARAM l)->__int64 {
+		PostMessage(HWND_BROADCAST, nc, w, l);
+		er1;
+	};
+	while (ifloopHook_temp) {
+		HHOOK hook = SetWindowsHookEx(WH_KEYBOARD_LL, proc, 0, 0);
+		Sleep(10);
+		UnhookWindowsHookEx(hook);
+	}
+	logging.Output(LOG_INFO, "f_HookLoop exit.");
 	er;
 
 	logging.Output(LOG_INFO, "f_HookLoop start.");

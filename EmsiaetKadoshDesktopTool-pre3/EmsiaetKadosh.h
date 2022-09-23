@@ -692,3 +692,16 @@ cpo:
 	}
 } InnerMessage;
 typedef ekMessage::EKMSG EKMSG;
+
+#define 如果 if
+#define 否则 else
+#define 空 v
+#define 整型 n
+#define （ (
+#define ） )
+#define 返回 er
+#define ； ;
+
+整型 测试函数 （ 整型 输入值 ）{
+	返回 输入值 ；
+}
