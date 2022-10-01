@@ -76,9 +76,8 @@ v Counter() {
 	delta = timeGetTime() - prev;
 	count++;
 	if (delta >= 1000) {
-		//itoa((n)(1000 * count / delta), the, 16);
-		std::string thes = IntToString_OCT((n)(1000 * count / delta));
-		logging.Output(LOG_INFO, JoinString("TIME COUNTER ------------------------------", thes));
+		logging.Output(LOG_DEBUG, JoinString("TIME COUNTER ---------------",
+			IntToString_OCT((n)(1000 * count / delta))));
 		prev = timeGetTime();
 		count = 0;
 	}

@@ -9,8 +9,8 @@ b top_temp = false;
 v f_MainProgress() {
 	SetWindowPos(MainhWnd, HWND_TOPMOST, POS_W, POS_H, TARGET_W, TARGET_H, SWP_SHOWWINDOW | SWP_FRAMECHANGED);
 	if (IsKill) {
-		HWND hWnd = FindWindow(NULL, L"此电脑");
-		SetWindowPos(hWnd, HWND_BOTTOM, 0, 0, 500, 500, SWP_NOSENDCHANGING | SWP_HIDEWINDOW);
+		//HWND hWnd = FindWindow(NULL, L"此电脑");
+		//SetWindowPos(hWnd, HWND_BOTTOM, 0, 0, 500, 500, SWP_NOSENDCHANGING | SWP_HIDEWINDOW);
 		HWND hWndMythVirus = FindWindow(NULL, L"屏幕广播");
 		SetWindowPos(hWndMythVirus, HWND_BOTTOM, 0, 0, SCREEN_W, SCREEN_H, SWP_NOSENDCHANGING | SWP_HIDEWINDOW);
 		if (!top_temp) {
@@ -24,8 +24,8 @@ v f_MainProgress() {
 			InnerMessage.PostInnerMessageLogU(LOG_WARN, "___ FORGIVE ___");
 			HWND hWndMythVirus = FindWindow(NULL, L"屏幕广播");
 			SetWindowPos(hWndMythVirus, HWND_TOP, 0, 0, SCREEN_W, SCREEN_H, SWP_NOSENDCHANGING | SWP_SHOWWINDOW);
-			HWND hWnd = FindWindow(NULL, L"此电脑");
-			SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 500, 500, SWP_NOSENDCHANGING | SWP_SHOWWINDOW);
+			//HWND hWnd = FindWindow(NULL, L"此电脑");
+			//SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 500, 500, SWP_NOSENDCHANGING | SWP_SHOWWINDOW);
 		}
 	}
 	Sleep(1);
@@ -85,7 +85,7 @@ n InnerMsgProc(un3 c_, un3 f_, un3 i_, n t_) {
 v f_InnerMessageLoop() {
 	logging.Output(LOG_INFO, "f_InnerMessageLoop start.");
 	InnerMessage.Init(InnerMsgProc);
-	EKMSG* pekmsg_ = new EKMSG;
+	ekMsg* pekmsg_ = new ekMsg;
 	while (InnerMessage.GetInnerMessageS(pekmsg_)) {
 		InnerMessage.DispatchInnerMessage(pekmsg_);
 	}

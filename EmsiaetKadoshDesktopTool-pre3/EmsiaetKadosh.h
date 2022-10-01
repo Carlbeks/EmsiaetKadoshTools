@@ -74,7 +74,7 @@
 
 #ifndef EMSIAETKADOSH_GRAND_SIMPLIFY
 #define EMSIAETKADOSH_GRAND_SIMPLIFY
-#define n int // int
+#define n int /*int*/
 typedef signed char sn3;
 typedef signed short sn4;
 typedef signed int sn5;
@@ -83,40 +83,44 @@ typedef unsigned char un3;
 typedef unsigned short un4;
 typedef unsigned int un5;
 typedef unsigned __int64 un6;
-#define f float // float
-#define v void // void
-#define b bool // bool
-#define S struct // struct
-#define C class // class
-#define c char // char
-#define wct wchar_t // wchar_t
-#define cpo public // public
-#define cpi private // private
-#define cpk protected // protected
-#define er return // return
-#define er1 return 1
-#define er0 return 0
-#define nMax 0b1111111111111111111111111111111111111111111111111111111111111111
-#define nMin 0b0000000000000000000000000000000000000000000000000000000000000000
-#define def(_Return_Type_,_pFunc_,_Parameters_) _Return_Type_(*_pFunc_)_Parameters_
+#define f		float			/*float		*/
+#define v		void			/*void		*/
+#define b		bool			/*bool		*/
+#define S		struct			/*struct	*/
+#define C		class			/*class		*/
+#define c		char			/*char		*/
+#define wct		wchar_t			/*wchar_t	*/
+#define cpo		public			/*public	*/
+#define cpi		private			/*private	*/
+#define cpk		protected		/*protected	*/
+#define er		return			/*return	*/
+#define er1		return 1		/*return 1	*/
+#define er0		return 0		/*return 0	*/
+#define nMax	0b1111111111111111111111111111111111111111111111111111111111111111
+#define nMin	0b0000000000000000000000000000000000000000000000000000000000000000
+#define ___NONE___
+#define def(_Return_Type_,_pFunc_,_Parameters_) _Return_Type_(*_pFunc_)_Parameters_ // Defines FunctionPointers
 
 #endif // !EMSIAETKADOSH_GRAND_SIMPLIFY
 
-#define _in_ 
-#define _out_
-#define _in_opt_
-#define _out_opt_
+#define _in_		___NONE___	/*Input parameter												*/
+#define _out_		___NONE___	/*Output target parameter										*/
+#define _in_opt_	___NONE___	/*Optional input parameter										*/
+#define _out_opt_	___NONE___	/*Optional output target parameter								*/
+#define _pre_decl_	___NONE___	/*Declaration Only												*/
+#define _decl_def_	___NONE___	/*Declaration and definition									*/
+#define _def_only_	___NONE___	/*Definition Only												*/
 
 #endif // !EMSIAETKADOSH_GRAND
 
 
-enum logrankLOG {
+_decl_def_ enum logrankLOG {
 	LOG_ALL, LOG_TRACE, LOG_DEBUG, LOG_INFO, LOG_WARN, LOG_ERROR, LOG_FATAL, LOG_OFF
 };
-enum cmdtypeCMD {
+_decl_def_ enum cmdtypeCMD {
 	CMD_stdout,CMD_stdin
 };
-C LOGGING{
+_decl_def_ C ekLogging{
 cpi:
 	std::mutex mutex_lock;
 cpo:
@@ -198,7 +202,7 @@ cpo:
 		er;
 	}
 } logging;
-v ShowCmd(cmdtypeCMD stdStatus) {
+_decl_def_ v ShowCmd(cmdtypeCMD stdStatus) {
 	AllocConsole();
 	switch (stdStatus)
 	{
@@ -213,11 +217,11 @@ v ShowCmd(cmdtypeCMD stdStatus) {
 	}
 	er;
 }
-std::string JoinString(_in_ std::string str1, _in_ std::string str2) {
+_decl_def_ std::string JoinString(_in_ std::string str1, _in_ std::string str2) {
 	std::string str = str1 + str2;
 	er str;
 };
-std::string IntToString_OCT(_in_ n target, _out_opt_ std::string* string = nullptr) {
+_decl_def_ std::string IntToString_OCT(_in_ n target, _out_opt_ std::string* string = nullptr) {
 	def(std::string, ___getStr, (n)) = [](n input)->std::string {
 		if (input) {
 			if (input >= 5) {
@@ -393,8 +397,9 @@ std::string IntToString_OCT(_in_ n target, _out_opt_ std::string* string = nullp
 	Er += ___getStr(temp);
 	er Er;
 }
+// std::string UIntToString_OCT(_in_ n target, _out_opt_ std::string* string = nullptr);
 
-C ekThreadBlocker{
+_decl_def_ C ekThreadBlocker{
 cpi:
 	b ifstop = false;
 	b ifloop = true;
@@ -447,8 +452,7 @@ cpo:
 		}
 	}
 } StepThreadBlocker;
-
-C ekMessage{
+_decl_def_ C ekMessage{
 cpi:
 	b is_active = false;
 	C EKMSGBUFFER {
@@ -691,17 +695,17 @@ cpo:
 		er;
 	}
 } InnerMessage;
-typedef ekMessage::EKMSG EKMSG;
+_decl_def_ typedef ekMessage::EKMSG ekMsg;
 
-#define 如果 if
-#define 否则 else
-#define 空 v
-#define 整型 n
-#define （ (
-#define ） )
-#define 返回 er
-#define ； ;
-
-整型 测试函数 （ 整型 输入值 ）{
-	返回 输入值 ；
-}
+//
+// 命名约定
+// 
+// #define global:	const						GLOBAL_CONST
+// global:			class struct union			ekClassStructUnion
+// global:			enum						enumNameENUM
+// global:			enum{elements}				ENUM_INT
+// global:			var							GlobalVars
+// global:			functions					f_FunctionName
+// local:			var							anyform_
+// 
+//
