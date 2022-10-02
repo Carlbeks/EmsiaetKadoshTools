@@ -77,7 +77,7 @@ v Counter() {
 	count++;
 	if (delta >= 1000) {
 		logging.Output(LOG_DEBUG, JoinString("TIME COUNTER ---------------",
-			IntToString_OCT((n)(1000 * count / delta))));
+			IntToString_10((n)(1000 * count / delta))));
 		prev = timeGetTime();
 		count = 0;
 	}

@@ -33,6 +33,18 @@ int __stdcall wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
     std::thread hookThread(f_HookLoop);
     hookThread.detach();
 
+    ekArray12<ekArray12<n>*> ekarn2;
+    ekArray12<n> ekarn;
+    n position = ekarn2.add(&ekarn);
+    ekarn2[position]->add(0);
+    ekarn2[position]->add(1);
+    ekarn2[position]->add(2);
+    position = ekarn2.add(&ekarn);
+    ekarn2[position]->add(0);
+    ekarn2[position]->add(1);
+    ekarn2[position]->add(2);
+    COUTEDL((*(ekarn2[position]))[2]);
+
     // 初始化全局字符串
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_EMSIAETKADOSHDESKTOPTOOLPRE3, szWindowClass, MAX_LOADSTRING);
@@ -46,6 +58,7 @@ int __stdcall wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
     else {
         logging.Output(LOG_INFO, "Init fin.");
     }
+    SetWindowLong(MainhWnd, GWL_STYLE, WS_VISIBLE);
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_EMSIAETKADOSHDESKTOPTOOLPRE3));
 
@@ -127,7 +140,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    TARGET_W = max(SCREEN_W / 16, TARGET_H / 4);
    POS_H = TARGET_H / 2;
    HWND hWnd = CreateWindowW(szWindowClass, szTitle,
-       WS_VISIBLE | WS_BORDER | WS_DLGFRAME
+       WS_VISIBLE
        , 0, 0, 300, 300, nullptr, nullptr, hInstance, nullptr);
    MainhWnd = hWnd;
 

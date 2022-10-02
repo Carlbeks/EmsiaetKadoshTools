@@ -4,6 +4,7 @@
 #include <mmsystem.h>
 #include <Windows.h>
 #include <stdio.h>
+#include <stdarg.h>
 #include <mutex>
 #pragma comment(lib,"winmm.lib")
 #pragma warning(disable:4996)
@@ -221,7 +222,7 @@ _decl_def_ std::string JoinString(_in_ std::string str1, _in_ std::string str2) 
 	std::string str = str1 + str2;
 	er str;
 };
-_decl_def_ std::string IntToString_OCT(_in_ n target, _out_opt_ std::string* string = nullptr) {
+_decl_def_ std::string IntToString_10(_in_ n target, _out_opt_ std::string* string = nullptr) {
 	def(std::string, ___getStr, (n)) = [](n input)->std::string {
 		if (input) {
 			if (input >= 5) {
@@ -697,15 +698,666 @@ cpo:
 } InnerMessage;
 _decl_def_ typedef ekMessage::EKMSG ekMsg;
 
+_decl_def_ template<typename type_> C ekArray{
+#define ekArray_pos_to_g_(pos____) \
+un3 g8 = pos____ & 15;\
+un3 g7 = pos____ >> 4;\
+un3 g6 = g7 >> 4; g7 = g7 & 15;\
+un3 g5 = g6 >> 4; g6 = g6 & 15;\
+un3 g4 = g5 >> 4; g5 = g5 & 15;\
+un3 g3 = g4 >> 4; g4 = g4 & 15;\
+un3 g2 = g3 >> 4; g3 = g3 & 15;\
+un3 g1 = (g2 >> 4) & 15; g2 = g2 & 15;
+#define ekArray_alloc \
+if (pra_[g1]) {\
+	if (pra_[g1][g2]) {\
+		if (pra_[g1][g2][g3]) {\
+			if (pra_[g1][g2][g3][g4]) {\
+				if (pra_[g1][g2][g3][g4][g5]) {\
+					if (pra_[g1][g2][g3][g4][g5][g6]) {\
+						if (pra_[g1][g2][g3][g4][g5][g6][g7]) {\
+							if (!pra_[g1][g2][g3][g4][g5][g6][g7][g8]) {\
+								pra_[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;\
+							}\
+						}\
+						else {\
+							pra_[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];\
+							pra_[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;\
+						}\
+					}\
+					else {\
+						pra_[g1][g2][g3][g4][g5][g6] = new p2_[16];\
+						pra_[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];\
+						pra_[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;\
+					}\
+				}\
+				else {\
+					pra_[g1][g2][g3][g4][g5] = new p3_[16];\
+					pra_[g1][g2][g3][g4][g5][g6] = new p2_[16];\
+					pra_[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];\
+					pra_[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;\
+				}\
+			}\
+			else {\
+				pra_[g1][g2][g3][g4] = new p4_[16];\
+				pra_[g1][g2][g3][g4][g5] = new p3_[16];\
+				pra_[g1][g2][g3][g4][g5][g6] = new p2_[16];\
+				pra_[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];\
+				pra_[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;\
+			}\
+		}\
+		else {\
+			pra_[g1][g2][g3] = new p5_[16];\
+			pra_[g1][g2][g3][g4] = new p4_[16];\
+			pra_[g1][g2][g3][g4][g5] = new p3_[16];\
+			pra_[g1][g2][g3][g4][g5][g6] = new p2_[16];\
+			pra_[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];\
+			pra_[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;\
+		}\
+	}\
+	else {\
+		pra_[g1][g2] = new p6_[16];\
+		pra_[g1][g2][g3] = new p5_[16];\
+		pra_[g1][g2][g3][g4] = new p4_[16];\
+		pra_[g1][g2][g3][g4][g5] = new p3_[16];\
+		pra_[g1][g2][g3][g4][g5][g6] = new p2_[16];\
+		pra_[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];\
+		pra_[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;\
+	}\
+}\
+else {\
+	pra_[g1] = new p7_[16];\
+	pra_[g1][g2] = new p6_[16];\
+	pra_[g1][g2][g3] = new p5_[16];\
+	pra_[g1][g2][g3][g4] = new p4_[16];\
+	pra_[g1][g2][g3][g4][g5] = new p3_[16];\
+	pra_[g1][g2][g3][g4][g5][g6] = new p2_[16];\
+	pra_[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];\
+	pra_[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;\
+}
+cpi:
+	_pre_decl_ using p9_ = type_*********;
+	_pre_decl_ using p8_ = type_********;
+	_pre_decl_ using p7_ = type_*******;
+	_pre_decl_ using p6_ = type_******;
+	_pre_decl_ using p5_ = type_*****;
+	_pre_decl_ using p4_ = type_****;
+	_pre_decl_ using p3_ = type_***;
+	_pre_decl_ using p2_ = type_**;
+	_pre_decl_ using p1_ = type_*;
+	_pre_decl_ using ty_ = type_;
+	_pre_decl_ p9_ pra_;
+	_decl_def_ un5 position = 0;
+	_decl_def_ un3 status = 0;
+	_pre_decl_ C TRANS;
+cpo:
+	// Main functions
+	_decl_def_ n add(_in_ type_ add_) {
+		ekArray_pos_to_g_(position)
+		ekArray_alloc
+		*(pra_[g1][g2][g3][g4][g5][g6][g7][g8]) = add_;
+		er position++;
+	}
+	_decl_def_ n cut() {
+		ekArray_pos_to_g_((position-1))
+		delete pra_[g1][g2][g3][g4][g5][g6][g7][g8];
+		er --position;
+	}
+	_decl_def_ n skip(_in_ un5 skip_pos_ = 1) {
+		position += skip_pos_;
+		er position;
+	}
+	_decl_def_ n getPosition() {
+		er position;
+	}
+	_decl_def_ b find(_in_ un5 pos_) {
+		ekArray_pos_to_g_(pos_)
+		if(pra_[g1]) {
+			if (pra_[g1][g2]) {
+				if (pra_[g1][g2][g3]) {
+					if (pra_[g1][g2][g3][g4]) {
+						if (pra_[g1][g2][g3][g4][g5]) {
+							if (pra_[g1][g2][g3][g4][g5][g6]) {
+								if (pra_[g1][g2][g3][g4][g5][g6][g7]) {
+									if (!pra_[g1][g2][g3][g4][g5][g6][g7][g8]) {
+										er false;
+									}
+								}
+								else {
+									er false;
+								}
+							}
+							else {
+								er false;
+							}
+						}
+						else {
+							er false;
+						}
+					}
+					else {
+						er false;
+					}
+				}
+				else {
+					er false;
+				}
+			}
+			else {
+				er false;
+			}
+		}
+		else {
+			er false;
+		}
+		er true;
+	}
+	_decl_def_ b assign(_in_ un5 pos_, _in_ ty_ target_) {
+		ekArray_pos_to_g_(pos_)
+		ekArray_alloc
+		*(pra_[g1][g2][g3][g4][g5][g6][g7][g8]) = target_;
+		er true;
+	}
+	_decl_def_ b del(_in_ un5 pos_) {
+		if (find(pos_)) {
+			ekArray_pos_to_g_(pos_)
+			delete pra_[g1][g2][g3][g4][g5][g6][g7][g8];
+			er true;
+		}
+		else {
+			er false;
+		}
+	}
+	// Operators
+	_decl_def_ type_ operator[](_in_ un5 pos_) {
+		ekArray_pos_to_g_(pos_)
+		er* (pra_[g1][g2][g3][g4][g5][g6][g7][g8]);
+	}
+	_decl_def_ TRANS set;
+	// Constructors and Destructors
+	_decl_def_ ekArray() : position { 0 }, status{ 1 }, set{ &pra_ } {
+		pra_ = new p8_[16]{};
+		er;
+	}
+	_decl_def_ ~ekArray() {
+		status = 0;
+		er;
+	}
+cpi:
+	_def_only_ C TRANS{
+	cpo:
+		_pre_decl_ p9_ * pra_p_;
+		_pre_decl_ ty_ target_;
+		_pre_decl_ un5 position;
+		_decl_def_ un3 status = 0;
+		_decl_def_ TRANS(p9_* pra_p__) : pra_p_{ pra_p__ } {}
+		_decl_def_ b operator=(ty_ target__) {
+			if (status & 1) {
+				ekArray_pos_to_g_(position)
+				if ((*pra_p_)[g1]) {
+					if ((*pra_p_)[g1][g2]) {
+						if ((*pra_p_)[g1][g2][g3]) {
+							if ((*pra_p_)[g1][g2][g3][g4]) {
+								if ((*pra_p_)[g1][g2][g3][g4][g5]) {
+									if ((*pra_p_)[g1][g2][g3][g4][g5][g6]) {
+										if ((*pra_p_)[g1][g2][g3][g4][g5][g6][g7]) {
+											if (!(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8]) {
+												(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
+											}
+										}
+										else {
+											(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
+											(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
+										}
+									}
+									else {
+
+										(*pra_p_)[g1][g2][g3][g4][g5][g6] = new p2_[16];
+										(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
+										(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
+									}
+								}
+								else {
+
+									(*pra_p_)[g1][g2][g3][g4][g5] = new p3_[16];
+									(*pra_p_)[g1][g2][g3][g4][g5][g6] = new p2_[16];
+									(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
+									(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
+								}
+							}
+							else {
+
+								(*pra_p_)[g1][g2][g3][g4] = new p4_[16];
+								(*pra_p_)[g1][g2][g3][g4][g5] = new p3_[16];
+								(*pra_p_)[g1][g2][g3][g4][g5][g6] = new p2_[16];
+								(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
+								(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
+							}
+						}
+						else {
+							(*pra_p_)[g1][g2][g3] = new p5_[16];
+							(*pra_p_)[g1][g2][g3][g4] = new p4_[16];
+							(*pra_p_)[g1][g2][g3][g4][g5] = new p3_[16];
+							(*pra_p_)[g1][g2][g3][g4][g5][g6] = new p2_[16];
+							(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
+							(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
+						}
+					}
+					else {
+
+						(*pra_p_)[g1][g2] = new p6_[16];
+						(*pra_p_)[g1][g2][g3] = new p5_[16];
+						(*pra_p_)[g1][g2][g3][g4] = new p4_[16];
+						(*pra_p_)[g1][g2][g3][g4][g5] = new p3_[16];
+						(*pra_p_)[g1][g2][g3][g4][g5][g6] = new p2_[16];
+						(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
+						(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
+					}
+				}
+				else {
+
+					(*pra_p_)[g1] = new p7_[16];
+					(*pra_p_)[g1][g2] = new p6_[16];
+					(*pra_p_)[g1][g2][g3] = new p5_[16];
+					(*pra_p_)[g1][g2][g3][g4] = new p4_[16];
+					(*pra_p_)[g1][g2][g3][g4][g5] = new p3_[16];
+					(*pra_p_)[g1][g2][g3][g4][g5][g6] = new p2_[16];
+					(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
+					(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
+				}
+				* ((*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8]) = target__;
+				position = 0;
+				er true;
+			}
+			else {
+				target_ = target__;
+				status = 2;
+			}
+			er false;
+		}
+		_decl_def_ TRANS operator[](_in_ un5 pos_) {
+			if (status & 2) {
+				ekArray_pos_to_g_(pos_)
+				if ((*pra_p_)[g1]) {
+					if ((*pra_p_)[g1][g2]) {
+						if ((*pra_p_)[g1][g2][g3]) {
+							if ((*pra_p_)[g1][g2][g3][g4]) {
+								if ((*pra_p_)[g1][g2][g3][g4][g5]) {
+									if ((*pra_p_)[g1][g2][g3][g4][g5][g6]) {
+										if ((*pra_p_)[g1][g2][g3][g4][g5][g6][g7]) {
+											if (!(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8]) {
+												(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
+											}
+										}
+										else {
+											(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
+											(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
+										}
+									}
+									else {
+
+										(*pra_p_)[g1][g2][g3][g4][g5][g6] = new p2_[16];
+										(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
+										(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
+									}
+								}
+								else {
+
+									(*pra_p_)[g1][g2][g3][g4][g5] = new p3_[16];
+									(*pra_p_)[g1][g2][g3][g4][g5][g6] = new p2_[16];
+									(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
+									(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
+								}
+							}
+							else {
+
+								(*pra_p_)[g1][g2][g3][g4] = new p4_[16];
+								(*pra_p_)[g1][g2][g3][g4][g5] = new p3_[16];
+								(*pra_p_)[g1][g2][g3][g4][g5][g6] = new p2_[16];
+								(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
+								(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
+							}
+						}
+						else {
+							(*pra_p_)[g1][g2][g3] = new p5_[16];
+							(*pra_p_)[g1][g2][g3][g4] = new p4_[16];
+							(*pra_p_)[g1][g2][g3][g4][g5] = new p3_[16];
+							(*pra_p_)[g1][g2][g3][g4][g5][g6] = new p2_[16];
+							(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
+							(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
+						}
+					}
+					else {
+
+						(*pra_p_)[g1][g2] = new p6_[16];
+						(*pra_p_)[g1][g2][g3] = new p5_[16];
+						(*pra_p_)[g1][g2][g3][g4] = new p4_[16];
+						(*pra_p_)[g1][g2][g3][g4][g5] = new p3_[16];
+						(*pra_p_)[g1][g2][g3][g4][g5][g6] = new p2_[16];
+						(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
+						(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
+					}
+				}
+				else {
+
+					(*pra_p_)[g1] = new p7_[16];
+					(*pra_p_)[g1][g2] = new p6_[16];
+					(*pra_p_)[g1][g2][g3] = new p5_[16];
+					(*pra_p_)[g1][g2][g3][g4] = new p4_[16];
+					(*pra_p_)[g1][g2][g3][g4][g5] = new p3_[16];
+					(*pra_p_)[g1][g2][g3][g4][g5][g6] = new p2_[16];
+					(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
+					(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
+				}
+				*((*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8]) = target_;
+				target_ = {};
+				er true;
+			}
+			else {
+				position = pos_;
+				status = 1;
+			}
+			er* this;
+		}
+		_decl_def_ TRANS operator()() {
+			position = 0;
+			target_ = {};
+			status = 0;
+			er* this;
+		}
+	};
+#undef ekArray_pos_to_g_
+#undef ekArray_alloc
+};
+_decl_def_ template<typename type_> C ekArray12{
+#define ekArray_pos_to_g_(pos____) \
+un3 g3 = pos____ & 15;\
+un3 g2 = pos____ >> 4;\
+un3 g1 = g2 >> 4 & 15;\
+g2 = g2 & 15;
+cpi:
+	_pre_decl_ using p4_ = type_****;
+	_pre_decl_ using p3_ = type_***;
+	_pre_decl_ using p2_ = type_**;
+	_pre_decl_ using p1_ = type_*;
+	_pre_decl_ using ty_ = type_;
+	_decl_def_ p4_ pra_;
+	_decl_def_ un4 position;
+	_decl_def_ un3 status;
+	_pre_decl_ C TRANS;
+cpo:
+	// Main functions
+	_decl_def_ n add(_in_ ty_ add_) {
+		ekArray_pos_to_g_(position)
+		if (pra_[g1]) {
+			if (pra_[g1][g2]) {
+				if (!pra_[g1][g2][g3]) {
+					pra_[g1][g2][g3] = new ty_;
+				}
+			}
+			else {
+				pra_[g1][g2] = new p1_[16]{};
+				pra_[g1][g2][g3] = new ty_;
+			}
+		}
+		else {
+			pra_[g1] = new p2_[16]{};
+			pra_[g1][g2] = new p1_[16]{};
+			pra_[g1][g2][g3] = new ty_;
+		}
+		*(pra_[g1][g2][g3]) = add_;
+		er position++;
+	}
+	_decl_def_ n addnew() {
+		ekArray_pos_to_g_(position)
+		if (pra_[g1]) {
+			if (pra_[g1][g2]) {
+				if (!pra_[g1][g2][g3]) {
+					pra_[g1][g2][g3] = new ty_;
+				}
+			}
+			else {
+				pra_[g1][g2] = new p1_[16]{};
+				pra_[g1][g2][g3] = new ty_;
+			}
+		}
+		else {
+			pra_[g1] = new p2_[16]{};
+			pra_[g1][g2] = new p1_[16]{};
+			pra_[g1][g2][g3] = new ty_;
+		}
+		er position++;
+	}
+	_decl_def_ n cut() {
+		ekArray_pos_to_g_((position-1))
+		delete pra_[g1][g2][g3];
+		er --position;
+	}
+	_decl_def_ n skip(_in_ n skip_pos_ = 1) {
+		position += skip_pos_;
+		er position;
+	}
+	_decl_def_ n getPosition() {
+		er position;
+	}
+	_decl_def_ b find(_in_ n pos_) {
+		if (pos_ < 0 or pos_ > 0xfff) {
+			er false;
+		}
+		ekArray_pos_to_g_(pos_)
+		if (pra_[g1]) {
+			if (pra_[g1][g2]) {
+				if (pra_[g1][g2][g3]) {
+					er true;
+				}
+			}
+		}
+		er false;
+	}
+	_decl_def_ b assign(_in_ n pos_, _in_ ty_ target_) {
+		if (pos_ < 0 or pos_ > 0xfff) {
+			er false;
+		}
+		ekArray_pos_to_g_(pos_)
+		if (pra_[g1]) {
+			if (pra_[g1][g2]) {
+				if (!pra_[g1][g2][g3]) {
+					pra_[g1][g2][g3] = new ty_;
+				}
+			}
+			else {
+				pra_[g1][g2] = new p1_[16]{};
+				pra_[g1][g2][g3] = new ty_;
+			}
+		}
+		else {
+			pra_[g1] = new p2_[16]{};
+			pra_[g1][g2] = new p1_[16]{};
+			pra_[g1][g2][g3] = new ty_;
+		}
+		*(pra_[g1][g2][g3]) = target_;
+		er true;
+	}
+	_decl_def_ b assignnew(_in_ n pos_) {
+		if (pos_ < 0 or pos_ > 0xfff) {
+			er false;
+		}
+		ekArray_pos_to_g_(pos_)
+		if (pra_[g1]) {
+			if (pra_[g1][g2]) {
+				if (!pra_[g1][g2][g3]) {
+					pra_[g1][g2][g3] = new ty_;
+				}
+			}
+			else {
+				pra_[g1][g2] = new p1_[16]{};
+				pra_[g1][g2][g3] = new ty_;
+			}
+		}
+		else {
+			pra_[g1] = new p2_[16]{};
+			pra_[g1][g2] = new p1_[16]{};
+			pra_[g1][g2][g3] = new ty_;
+		}
+		er true;
+	}
+	_decl_def_ b del(_in_ n pos_) {
+		if (pos_ < 0 or pos_ > 0xfff) {
+			er false;
+		}
+		ekArray_pos_to_g_(pos_)
+		if (pra_[g1]) {
+			if (pra_[g1][g2]) {
+				if (pra_[g1][g2][g3]) {
+					delete pra_[g1][g2][g3];
+					er true;
+				}
+			}
+		}
+		er false;
+	}
+	// Operators
+	_decl_def_ ty_ operator[](_in_ n pos_) {
+		ekArray_pos_to_g_(pos_)
+		er* (pra_[g1][g2][g3]);
+	}
+	_decl_def_ TRANS set;
+	// Constructor & Destrucor
+	_decl_def_ ekArray12() : position{ 0 }, status{ 1 }, set{ &pra_ } {
+		pra_ = new p3_[16]{};
+		er;
+	}
+	_decl_def_ ~ekArray12() { status = 0; er; }
+cpi:
+	_def_only_ C TRANS{
+	cpo:
+		_pre_decl_ p4_ * pra_p_;
+		_pre_decl_ ty_ target_;
+		_pre_decl_ n position;
+		_decl_def_ un3 status = 0;
+		_decl_def_ TRANS(p4_* pra_p__) : pra_p_{ pra_p__ } {}
+		_decl_def_ b operator=(ty_ target__) {
+			if (status & 1) {
+				ekArray_pos_to_g_(position)
+				if ((*pra_p_)[g1]) {
+					if (( * pra_p_)[g1][g2]) {
+						if (!(* pra_p_)[g1][g2][g3]) {
+							(* pra_p_)[g1][g2][g3] = new ty_;
+						}
+					}
+					else {
+						(*pra_p_)[g1][g2] = new p1_[16]{};
+						(*pra_p_)[g1][g2][g3] = new ty_;
+					}
+				}
+				else {
+					(*pra_p_)[g1] = new p2_[16]{};
+					(*pra_p_)[g1][g2] = new p1_[16]{};
+					(*pra_p_)[g1][g2][g3] = new ty_;
+				}
+				*((*pra_p_)[g1][g2][g3]) = target__;
+				position = 0;
+				er true;
+			}
+			else {
+				target_ = target__;
+				status = 2;
+			}
+			er false;
+		}
+		_decl_def_ TRANS operator[](_in_ un5 pos_) {
+			if (status & 2) {
+				ekArray_pos_to_g_(pos_)
+				if ((*pra_p_)[g1]) {
+					if ((*pra_p_)[g1][g2]) {
+						if (!(*pra_p_)[g1][g2][g3]) {
+							(*pra_p_)[g1][g2][g3] = new ty_;
+						}
+					}
+					else {
+						(*pra_p_)[g1][g2] = new p1_[16]{};
+						(*pra_p_)[g1][g2][g3] = new ty_;
+					}
+				}
+				else {
+					(*pra_p_)[g1] = new p2_[16]{};
+					(*pra_p_)[g1][g2] = new p1_[16]{};
+					(*pra_p_)[g1][g2][g3] = new ty_;
+				}
+				*((*pra_p_)[g1][g2][g3]) = target_;
+				target_ = {};
+				er* this;
+			}
+			else {
+				position = pos_;
+				status = 1;
+			}
+			er* this;
+		}
+		_decl_def_ TRANS operator()() {
+			position = 0;
+			target_ = {};
+			status = 0;
+			er* this;
+		}
+	};
+#undef ekArray_pos_to_g_
+};
+_decl_def_ C ekTypeConverter{
+cpi:
+	ekArray12<v* (*)(v*,v*,n)> pfuncs;
+	ekArray12<c*> pchars;
+	ekArray12<ekArray12<v* (*)(v*, v*, n)>> pfunc2;
+	un5 count = 0;
+cpo:
+	ekTypeConverter() {
+		pchars.add(const_cast<c*>(typeid(n).name()));
+		pchars.add(const_cast<c*>(typeid(f).name()));
+		pchars.add(const_cast<c*>(typeid(v).name()));
+		pchars.add(const_cast<c*>(typeid(b).name()));
+		pchars.add(const_cast<c*>(typeid(c).name()));
+		count = pchars.add(const_cast<c*>(typeid(wct).name()));
+		er;
+	}
+	n Define(const c* pchar_, const n size_) {
+		count = pchars.add(const_cast<c*>(pchar_));
+		er count;
+	}
+	template<typename Output_, typename Input_>
+	Output_ Convert(
+		_in_	Input_		input_,
+		_out_	Output_*	output_,
+		_in_	n			if_return_to_output__
+	) {
+		n input_typecode_ = -1;
+		const c* input_typename_ = typeid(Input_).name();
+		for (n i = 0; i <= count; i++) {
+			if (pchars[i] == input_typename_) {
+				input_typecode_ = i;
+				break;
+			}
+		}
+		n output_typecode_ = -1;
+		const c* output_typename_ = typeid(Output_).name();
+		for (n i = 0; i <= count; i++) {
+			if (pchars[i] == output_typename_) {
+				output_typecode_ = i;
+				break;
+			}
+		}
+		er 0;
+	}
+};
 //
 // ÃüÃûÔ¼¶¨
 // 
 // #define global:	const						GLOBAL_CONST
 // global:			class struct union			ekClassStructUnion
 // global:			enum						enumNameENUM
-// global:			enum{elements}				ENUM_INT
+// global:			enum{elements}				ENUM_ELEMENTS
 // global:			var							GlobalVars
 // global:			functions					f_FunctionName
 // local:			var							anyform_
+// 
 // 
 //

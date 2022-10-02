@@ -57,7 +57,7 @@ n InnerMsgProc(un3 c_, un3 f_, un3 i_, n t_) {
 				}
 				else {
 					ExitCallCount++;
-					logging.Output(LOG_WARN, JoinString(IntToString_OCT(ExitCallCount)," / 5 to close"));
+					logging.Output(LOG_WARN, JoinString(IntToString_10(ExitCallCount)," / 5 to close"));
 				}
 				break;
 			case MOUSE_LEAVE:
