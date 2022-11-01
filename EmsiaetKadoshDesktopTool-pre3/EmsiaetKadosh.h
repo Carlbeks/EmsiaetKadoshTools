@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <mutex>
+#include <exception>
 #pragma comment(lib,"winmm.lib")
 #pragma warning(disable:4996)
 
@@ -101,6 +102,8 @@ typedef unsigned __int64 un6;
 #define nMin	0b0000000000000000000000000000000000000000000000000000000000000000
 #define ___NONE___
 #define def(_Return_Type_,_pFunc_,_Parameters_) _Return_Type_(*_pFunc_)_Parameters_ // Defines FunctionPointers
+#define ptrType reinterpret_cast
+#define typetrans ptrType
 
 #endif // !EMSIAETKADOSH_GRAND_SIMPLIFY
 
@@ -111,6 +114,9 @@ typedef unsigned __int64 un6;
 #define _pre_decl_	___NONE___	/*Declaration Only												*/
 #define _decl_def_	___NONE___	/*Declaration and definition									*/
 #define _def_only_	___NONE___	/*Definition Only												*/
+#define $Overridable virtual	/*Function is overridable.										*/
+#define $Override	override
+#define $Overriding(expression) expression $Override
 
 #endif // !EMSIAETKADOSH_GRAND
 
@@ -698,654 +704,371 @@ cpo:
 } InnerMessage;
 _decl_def_ typedef ekMessage::EKMSG ekMsg;
 
-_decl_def_ template<typename type_> C ekArray{
-#define ekArray_pos_to_g_(pos____) \
-un3 g8 = pos____ & 15;\
-un3 g7 = pos____ >> 4;\
-un3 g6 = g7 >> 4; g7 = g7 & 15;\
-un3 g5 = g6 >> 4; g6 = g6 & 15;\
-un3 g4 = g5 >> 4; g5 = g5 & 15;\
-un3 g3 = g4 >> 4; g4 = g4 & 15;\
-un3 g2 = g3 >> 4; g3 = g3 & 15;\
-un3 g1 = (g2 >> 4) & 15; g2 = g2 & 15;
-#define ekArray_alloc \
-if (pra_[g1]) {\
-	if (pra_[g1][g2]) {\
-		if (pra_[g1][g2][g3]) {\
-			if (pra_[g1][g2][g3][g4]) {\
-				if (pra_[g1][g2][g3][g4][g5]) {\
-					if (pra_[g1][g2][g3][g4][g5][g6]) {\
-						if (pra_[g1][g2][g3][g4][g5][g6][g7]) {\
-							if (!pra_[g1][g2][g3][g4][g5][g6][g7][g8]) {\
-								pra_[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;\
-							}\
-						}\
-						else {\
-							pra_[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];\
-							pra_[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;\
-						}\
-					}\
-					else {\
-						pra_[g1][g2][g3][g4][g5][g6] = new p2_[16];\
-						pra_[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];\
-						pra_[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;\
-					}\
-				}\
-				else {\
-					pra_[g1][g2][g3][g4][g5] = new p3_[16];\
-					pra_[g1][g2][g3][g4][g5][g6] = new p2_[16];\
-					pra_[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];\
-					pra_[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;\
-				}\
-			}\
-			else {\
-				pra_[g1][g2][g3][g4] = new p4_[16];\
-				pra_[g1][g2][g3][g4][g5] = new p3_[16];\
-				pra_[g1][g2][g3][g4][g5][g6] = new p2_[16];\
-				pra_[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];\
-				pra_[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;\
-			}\
-		}\
-		else {\
-			pra_[g1][g2][g3] = new p5_[16];\
-			pra_[g1][g2][g3][g4] = new p4_[16];\
-			pra_[g1][g2][g3][g4][g5] = new p3_[16];\
-			pra_[g1][g2][g3][g4][g5][g6] = new p2_[16];\
-			pra_[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];\
-			pra_[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;\
-		}\
-	}\
-	else {\
-		pra_[g1][g2] = new p6_[16];\
-		pra_[g1][g2][g3] = new p5_[16];\
-		pra_[g1][g2][g3][g4] = new p4_[16];\
-		pra_[g1][g2][g3][g4][g5] = new p3_[16];\
-		pra_[g1][g2][g3][g4][g5][g6] = new p2_[16];\
-		pra_[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];\
-		pra_[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;\
-	}\
-}\
-else {\
-	pra_[g1] = new p7_[16];\
-	pra_[g1][g2] = new p6_[16];\
-	pra_[g1][g2][g3] = new p5_[16];\
-	pra_[g1][g2][g3][g4] = new p4_[16];\
-	pra_[g1][g2][g3][g4][g5] = new p3_[16];\
-	pra_[g1][g2][g3][g4][g5][g6] = new p2_[16];\
-	pra_[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];\
-	pra_[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;\
-}
-cpi:
-	_pre_decl_ using p9_ = type_*********;
-	_pre_decl_ using p8_ = type_********;
-	_pre_decl_ using p7_ = type_*******;
-	_pre_decl_ using p6_ = type_******;
-	_pre_decl_ using p5_ = type_*****;
-	_pre_decl_ using p4_ = type_****;
-	_pre_decl_ using p3_ = type_***;
-	_pre_decl_ using p2_ = type_**;
-	_pre_decl_ using p1_ = type_*;
-	_pre_decl_ using ty_ = type_;
-	_pre_decl_ p9_ pra_;
-	_decl_def_ un5 position = 0;
-	_decl_def_ un3 status = 0;
-	_pre_decl_ C TRANS;
+_pre_decl_ C Pointer;
+_pre_decl_ C Object__;
+_pre_decl_ template<typename Type_, typename TypeSelf__> C ObjectInterface__;
+_pre_decl_ template<typename Type_, typename TypeSelf__> C Number__;
+_pre_decl_ C Integar;
+_pre_decl_ C Boolean;
+_pre_decl_ C Character;
+_pre_decl_ C ArrayBase;
+_pre_decl_ template<typename Type_> C ArrayList;
+_def_only_ C Pointer{
 cpo:
-	// Main functions
-	_decl_def_ n add(_in_ type_ add_) {
-		ekArray_pos_to_g_(position)
-		ekArray_alloc
-		*(pra_[g1][g2][g3][g4][g5][g6][g7][g8]) = add_;
-		er position++;
-	}
-	_decl_def_ n cut() {
-		ekArray_pos_to_g_((position-1))
-		delete pra_[g1][g2][g3][g4][g5][g6][g7][g8];
-		er --position;
-	}
-	_decl_def_ n skip(_in_ un5 skip_pos_ = 1) {
-		position += skip_pos_;
-		er position;
-	}
-	_decl_def_ n getPosition() {
-		er position;
-	}
-	_decl_def_ b find(_in_ un5 pos_) {
-		ekArray_pos_to_g_(pos_)
-		if(pra_[g1]) {
-			if (pra_[g1][g2]) {
-				if (pra_[g1][g2][g3]) {
-					if (pra_[g1][g2][g3][g4]) {
-						if (pra_[g1][g2][g3][g4][g5]) {
-							if (pra_[g1][g2][g3][g4][g5][g6]) {
-								if (pra_[g1][g2][g3][g4][g5][g6][g7]) {
-									if (!pra_[g1][g2][g3][g4][g5][g6][g7][g8]) {
-										er false;
-									}
-								}
-								else {
-									er false;
-								}
-							}
-							else {
-								er false;
-							}
-						}
-						else {
-							er false;
-						}
-					}
-					else {
-						er false;
-					}
-				}
-				else {
-					er false;
-				}
-			}
-			else {
-				er false;
-			}
-		}
-		else {
-			er false;
-		}
-		er true;
-	}
-	_decl_def_ b assign(_in_ un5 pos_, _in_ ty_ target_) {
-		ekArray_pos_to_g_(pos_)
-		ekArray_alloc
-		*(pra_[g1][g2][g3][g4][g5][g6][g7][g8]) = target_;
-		er true;
-	}
-	_decl_def_ b del(_in_ un5 pos_) {
-		if (find(pos_)) {
-			ekArray_pos_to_g_(pos_)
-			delete pra_[g1][g2][g3][g4][g5][g6][g7][g8];
-			er true;
-		}
-		else {
-			er false;
-		}
-	}
-	// Operators
-	_decl_def_ type_ operator[](_in_ un5 pos_) {
-		ekArray_pos_to_g_(pos_)
-		er* (pra_[g1][g2][g3][g4][g5][g6][g7][g8]);
-	}
-	_decl_def_ TRANS set;
-	// Constructors and Destructors
-	_decl_def_ ekArray() : position { 0 }, status{ 1 }, set{ &pra_ } {
-		pra_ = new p8_[16]{};
-		er;
-	}
-	_decl_def_ ~ekArray() {
-		status = 0;
-		er;
-	}
+	using pointer__ = v*;
 cpi:
-	_def_only_ C TRANS{
-	cpo:
-		_pre_decl_ p9_ * pra_p_;
-		_pre_decl_ ty_ target_;
-		_pre_decl_ un5 position;
-		_decl_def_ un3 status = 0;
-		_decl_def_ TRANS(p9_* pra_p__) : pra_p_{ pra_p__ } {}
-		_decl_def_ b operator=(ty_ target__) {
-			if (status & 1) {
-				ekArray_pos_to_g_(position)
-				if ((*pra_p_)[g1]) {
-					if ((*pra_p_)[g1][g2]) {
-						if ((*pra_p_)[g1][g2][g3]) {
-							if ((*pra_p_)[g1][g2][g3][g4]) {
-								if ((*pra_p_)[g1][g2][g3][g4][g5]) {
-									if ((*pra_p_)[g1][g2][g3][g4][g5][g6]) {
-										if ((*pra_p_)[g1][g2][g3][g4][g5][g6][g7]) {
-											if (!(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8]) {
-												(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
-											}
-										}
-										else {
-											(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
-											(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
-										}
-									}
-									else {
-
-										(*pra_p_)[g1][g2][g3][g4][g5][g6] = new p2_[16];
-										(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
-										(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
-									}
-								}
-								else {
-
-									(*pra_p_)[g1][g2][g3][g4][g5] = new p3_[16];
-									(*pra_p_)[g1][g2][g3][g4][g5][g6] = new p2_[16];
-									(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
-									(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
-								}
-							}
-							else {
-
-								(*pra_p_)[g1][g2][g3][g4] = new p4_[16];
-								(*pra_p_)[g1][g2][g3][g4][g5] = new p3_[16];
-								(*pra_p_)[g1][g2][g3][g4][g5][g6] = new p2_[16];
-								(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
-								(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
-							}
-						}
-						else {
-							(*pra_p_)[g1][g2][g3] = new p5_[16];
-							(*pra_p_)[g1][g2][g3][g4] = new p4_[16];
-							(*pra_p_)[g1][g2][g3][g4][g5] = new p3_[16];
-							(*pra_p_)[g1][g2][g3][g4][g5][g6] = new p2_[16];
-							(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
-							(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
-						}
-					}
-					else {
-
-						(*pra_p_)[g1][g2] = new p6_[16];
-						(*pra_p_)[g1][g2][g3] = new p5_[16];
-						(*pra_p_)[g1][g2][g3][g4] = new p4_[16];
-						(*pra_p_)[g1][g2][g3][g4][g5] = new p3_[16];
-						(*pra_p_)[g1][g2][g3][g4][g5][g6] = new p2_[16];
-						(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
-						(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
-					}
-				}
-				else {
-
-					(*pra_p_)[g1] = new p7_[16];
-					(*pra_p_)[g1][g2] = new p6_[16];
-					(*pra_p_)[g1][g2][g3] = new p5_[16];
-					(*pra_p_)[g1][g2][g3][g4] = new p4_[16];
-					(*pra_p_)[g1][g2][g3][g4][g5] = new p3_[16];
-					(*pra_p_)[g1][g2][g3][g4][g5][g6] = new p2_[16];
-					(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
-					(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
-				}
-				* ((*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8]) = target__;
-				position = 0;
-				er true;
-			}
-			else {
-				target_ = target__;
-				status = 2;
-			}
-			er false;
-		}
-		_decl_def_ TRANS operator[](_in_ un5 pos_) {
-			if (status & 2) {
-				ekArray_pos_to_g_(pos_)
-				if ((*pra_p_)[g1]) {
-					if ((*pra_p_)[g1][g2]) {
-						if ((*pra_p_)[g1][g2][g3]) {
-							if ((*pra_p_)[g1][g2][g3][g4]) {
-								if ((*pra_p_)[g1][g2][g3][g4][g5]) {
-									if ((*pra_p_)[g1][g2][g3][g4][g5][g6]) {
-										if ((*pra_p_)[g1][g2][g3][g4][g5][g6][g7]) {
-											if (!(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8]) {
-												(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
-											}
-										}
-										else {
-											(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
-											(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
-										}
-									}
-									else {
-
-										(*pra_p_)[g1][g2][g3][g4][g5][g6] = new p2_[16];
-										(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
-										(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
-									}
-								}
-								else {
-
-									(*pra_p_)[g1][g2][g3][g4][g5] = new p3_[16];
-									(*pra_p_)[g1][g2][g3][g4][g5][g6] = new p2_[16];
-									(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
-									(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
-								}
-							}
-							else {
-
-								(*pra_p_)[g1][g2][g3][g4] = new p4_[16];
-								(*pra_p_)[g1][g2][g3][g4][g5] = new p3_[16];
-								(*pra_p_)[g1][g2][g3][g4][g5][g6] = new p2_[16];
-								(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
-								(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
-							}
-						}
-						else {
-							(*pra_p_)[g1][g2][g3] = new p5_[16];
-							(*pra_p_)[g1][g2][g3][g4] = new p4_[16];
-							(*pra_p_)[g1][g2][g3][g4][g5] = new p3_[16];
-							(*pra_p_)[g1][g2][g3][g4][g5][g6] = new p2_[16];
-							(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
-							(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
-						}
-					}
-					else {
-
-						(*pra_p_)[g1][g2] = new p6_[16];
-						(*pra_p_)[g1][g2][g3] = new p5_[16];
-						(*pra_p_)[g1][g2][g3][g4] = new p4_[16];
-						(*pra_p_)[g1][g2][g3][g4][g5] = new p3_[16];
-						(*pra_p_)[g1][g2][g3][g4][g5][g6] = new p2_[16];
-						(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
-						(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
-					}
-				}
-				else {
-
-					(*pra_p_)[g1] = new p7_[16];
-					(*pra_p_)[g1][g2] = new p6_[16];
-					(*pra_p_)[g1][g2][g3] = new p5_[16];
-					(*pra_p_)[g1][g2][g3][g4] = new p4_[16];
-					(*pra_p_)[g1][g2][g3][g4][g5] = new p3_[16];
-					(*pra_p_)[g1][g2][g3][g4][g5][g6] = new p2_[16];
-					(*pra_p_)[g1][g2][g3][g4][g5][g6][g7] = new p1_[16];
-					(*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8] = new ty_;
-				}
-				*((*pra_p_)[g1][g2][g3][g4][g5][g6][g7][g8]) = target_;
-				target_ = {};
-				er true;
-			}
-			else {
-				position = pos_;
-				status = 1;
-			}
-			er* this;
-		}
-		_decl_def_ TRANS operator()() {
-			position = 0;
-			target_ = {};
-			status = 0;
-			er* this;
-		}
-	};
-#undef ekArray_pos_to_g_
-#undef ekArray_alloc
+	pointer__ self_;
+cpo:
+	Pointer() {
+		self_ = nullptr;
+	}
+	Pointer(pointer__ input) {
+		self_ = input;
+	}
+	pointer__ self() {
+		er self_;
+	}
+	pointer__ operator()() {
+		er self_;
+	}
 };
-_decl_def_ template<typename type_> C ekArray12{
-#define ekArray_pos_to_g_(pos____) \
-un3 g3 = pos____ & 15;\
-un3 g2 = pos____ >> 4;\
-un3 g1 = g2 >> 4 & 15;\
-g2 = g2 & 15;
-cpi:
-	_pre_decl_ using p4_ = type_****;
-	_pre_decl_ using p3_ = type_***;
-	_pre_decl_ using p2_ = type_**;
-	_pre_decl_ using p1_ = type_*;
-	_pre_decl_ using ty_ = type_;
-	_decl_def_ p4_ pra_;
-	_decl_def_ un4 position;
-	_decl_def_ un3 status;
-	_pre_decl_ C TRANS;
+_def_only_ C Object__{
+cpk:
+	Pointer selfp;
 cpo:
-	// Main functions
-	_decl_def_ n add(_in_ ty_ add_) {
-		ekArray_pos_to_g_(position)
-		if (pra_[g1]) {
-			if (pra_[g1][g2]) {
-				if (!pra_[g1][g2][g3]) {
-					pra_[g1][g2][g3] = new ty_;
-				}
-			}
-			else {
-				pra_[g1][g2] = new p1_[16]{};
-				pra_[g1][g2][g3] = new ty_;
+	$Overridable std::string toString() {
+		er "";
+	}
+	$Overridable Pointer getPointer() {
+		er selfp;
+	}
+	$Overridable std::string PointerString() {
+		er "";
+	}
+};
+_def_only_ template<typename Type_, typename TypeSelf__> C ObjectInterface__ :virtual cpo Object__{
+cpk:
+	$Overridable v set(Pointer input) {
+		*(Type_*)(selfp.self()) = *(Type_*)(input.self());
+		er;
+	}
+cpo:
+	$Overridable TypeSelf__ that() {
+		logging.Output(LOG_ERROR, "[DynamicCastException] @ ObjectInterface__::that(), Unoverrode, dynamic_cast failure.");
+		TypeSelf__* Er = {};
+		try {
+			Er = dynamic_cast<TypeSelf__*>(this);
+		}
+		catch (...) {
+			throw;
+			exit(1);
+		}
+		er* Er;
+	}
+	$Overridable Type_ self() {
+		er* (Type_*)(selfp.self());
+	}
+};
+_def_only_ template<typename Type_, typename TypeSelf__> C Number__ : virtual cpo Object__, virtual cpo ObjectInterface__<Type_, TypeSelf__>{
+cpo:
+	Number__(TypeSelf__ input) {
+		selfp = new Type_;
+		*(Type_*)(selfp()) = *(Type_*)(dynamic_cast<Object__*>(&input)->getPointer()());
+	}
+	Number__(Type_ input) {
+		selfp = new Type_;
+		*(Type_*)(selfp()) = input;
+	}
+	Number__() {
+		selfp = new Type_;
+	}
+	static TypeSelf__ add(TypeSelf__ input1, TypeSelf__ input2) {
+		TypeSelf__ Ret(*(Type_*)(input1.getPointer()()) + (*(Type_*)(input2.getPointer()())));
+		er Ret;
+	}
+	static TypeSelf__ substract(TypeSelf__ input1, TypeSelf__ input2) {
+		TypeSelf__ Ret(*(Type_*)(input1.getPointer()()) - (*(Type_*)(input2.getPointer()())));
+		er Ret;
+	}
+	static TypeSelf__ multiply(TypeSelf__ input1, TypeSelf__ input2) {
+		TypeSelf__ Ret(*(Type_*)(input1.getPointer()()) * (*(Type_*)(input2.getPointer()())));
+		er Ret;
+	}
+	static TypeSelf__ divide(TypeSelf__ input1, TypeSelf__ input2) {
+		TypeSelf__ Ret(*(Type_*)(input1.getPointer()()) / (*(Type_*)(input2.getPointer()())));
+		er Ret;
+	}
+	$Overridable TypeSelf__ add(Type_ input) {
+		*(Type_*)(selfp.self()) += input;
+		er* dynamic_cast<TypeSelf__*>(this);
+	}
+	$Overridable TypeSelf__ substract(Type_ input) {
+		*(Type_*)(selfp.self()) -= input;
+		er* dynamic_cast<TypeSelf__*>(this);
+	}
+	$Overridable TypeSelf__ multiply(Type_ input) {
+		*(Type_*)(selfp.self()) *= input;
+		er* dynamic_cast<TypeSelf__*>(this);
+	}
+	$Overridable TypeSelf__ divide(Type_ input) {
+		*(Type_*)(selfp.self()) /= input;
+		er* dynamic_cast<TypeSelf__*>(this);
+	}
+	$Overridable TypeSelf__ add(TypeSelf__ input) {
+		*(Type_*)(selfp.self()) += *(Type_*)(input.getPointer()());
+		er* dynamic_cast<TypeSelf__*>(this);
+	}
+	$Overridable TypeSelf__ substract(TypeSelf__ input) {
+		*(Type_*)(selfp.self()) -= *(Type_*)(input.getPointer()());
+		er* dynamic_cast<TypeSelf__*>(this);
+	}
+	$Overridable TypeSelf__ multiply(TypeSelf__ input) {
+		*(Type_*)(selfp.self()) *= *(Type_*)(input.getPointer()());
+		er* dynamic_cast<TypeSelf__*>(this);
+	}
+	$Overridable TypeSelf__ divide(TypeSelf__ input) {
+		*(Type_*)(selfp.self()) /= *(Type_*)(input.getPointer()());
+		er* dynamic_cast<TypeSelf__*>(this);
+	}
+	$Overridable TypeSelf__ clone() {
+		TypeSelf__ Ret(*typetrans<Type_*>(selfp.self()));
+		er Ret;
+	}
+};
+_def_only_ C Integar : virtual cpo Number__<n, Integar>{
+cpo:
+	Integar divideRound(n input) {
+		*(n*)(selfp.self()) /= input;
+		er* this;
+	}
+	Integar divideRound(Integar input) {
+		*(n*)(selfp.self()) /= *(n*)(input.selfp.self());
+		er* this;
+	}
+	Integar divideRemain(n input) {
+		*(n*)(selfp.self()) % input;
+		er* this;
+	}
+	Integar divideRemain(Integar input) {
+		*(n*)(selfp.self()) % *(n*)(input.selfp.self());
+		er* this;
+	}
+	static Integar divideRound(n input1, n input2) {
+		Integar ret(input1 / input2);
+		er ret;
+	}
+	static Integar divideRound(Integar input1, Integar input2) {
+		Integar ret(*(n*)(input1.getPointer()()) / (*(n*)(input2.getPointer()())));
+		er ret;
+	}
+	static Integar divideRemain(n input1, n input2) {
+		Integar ret(input1 % input2);
+		er ret;
+	}
+	static Integar divideRemain(Integar input1, Integar input2) {
+		Integar ret(*(n*)(input1.getPointer()()) % (*(n*)(input2.getPointer()())));
+		er ret;
+	}
+	Integar() {
+
+	}
+	Integar(n input) {
+		*(n*)(selfp.self()) = input;
+	}
+	Integar(Integar& input) {
+		*(n*)(selfp.self()) = input.self();
+	}
+	Integar(const Integar& input) {
+		Pointer ptr__ = input.selfp;
+		*(n*)(selfp.self()) = *(n*)(ptr__.self());
+	}
+	Integar(c input) {
+		if (input != NULL) {
+			*(n*)(selfp.self()) = input;
+		}
+	}
+	$Overriding(Integar that()) {
+		er* this;
+	}
+	operator n() {
+		er this->self();
+	}
+};
+
+_def_only_ C ArrayBase{
+cpk:
+	Pointer list_;
+	n layer_ = 0;
+cpo:
+	static const un3 _16 = 0, _256 = 1, _4096 = 2, _65536 = 3, _1048576 = 4, _16777216 = 5, _268435456 = 6, _4294967296 = 7;
+	ArrayBase() {
+		list_ = {};
+	}
+};
+_def_only_ template<typename Type_> C ArrayList : cpo ArrayBase{
+cpi:
+	b onDelete() {
+		if (layer_ == 0) {
+			Type_** list__ = reinterpret_cast<Type_**>(list_.self());
+			if (
+				list__[0] == nullptr &&
+				list__[1] == nullptr &&
+				list__[2] == nullptr &&
+				list__[3] == nullptr &&
+				list__[4] == nullptr &&
+				list__[5] == nullptr &&
+				list__[6] == nullptr &&
+				list__[7] == nullptr &&
+				list__[8] == nullptr &&
+				list__[9] == nullptr &&
+				list__[10] == nullptr &&
+				list__[11] == nullptr &&
+				list__[12] == nullptr &&
+				list__[13] == nullptr &&
+				list__[14] == nullptr &&
+				list__[15] == nullptr
+				) {
+				delete this;
+				er true;
 			}
 		}
 		else {
-			pra_[g1] = new p2_[16]{};
-			pra_[g1][g2] = new p1_[16]{};
-			pra_[g1][g2][g3] = new ty_;
-		}
-		*(pra_[g1][g2][g3]) = add_;
-		er position++;
-	}
-	_decl_def_ n addnew() {
-		ekArray_pos_to_g_(position)
-		if (pra_[g1]) {
-			if (pra_[g1][g2]) {
-				if (!pra_[g1][g2][g3]) {
-					pra_[g1][g2][g3] = new ty_;
-				}
-			}
-			else {
-				pra_[g1][g2] = new p1_[16]{};
-				pra_[g1][g2][g3] = new ty_;
-			}
-		}
-		else {
-			pra_[g1] = new p2_[16]{};
-			pra_[g1][g2] = new p1_[16]{};
-			pra_[g1][g2][g3] = new ty_;
-		}
-		er position++;
-	}
-	_decl_def_ n cut() {
-		ekArray_pos_to_g_((position-1))
-		delete pra_[g1][g2][g3];
-		er --position;
-	}
-	_decl_def_ n skip(_in_ n skip_pos_ = 1) {
-		position += skip_pos_;
-		er position;
-	}
-	_decl_def_ n getPosition() {
-		er position;
-	}
-	_decl_def_ b find(_in_ n pos_) {
-		if (pos_ < 0 or pos_ > 0xfff) {
-			er false;
-		}
-		ekArray_pos_to_g_(pos_)
-		if (pra_[g1]) {
-			if (pra_[g1][g2]) {
-				if (pra_[g1][g2][g3]) {
-					er true;
-				}
+			ArrayList<Type_>** list__ = reinterpret_cast<ArrayList<Type_>**>(list_.self());
+			if (
+				list__[0] == nullptr &&
+				list__[1] == nullptr &&
+				list__[2] == nullptr &&
+				list__[3] == nullptr &&
+				list__[4] == nullptr &&
+				list__[5] == nullptr &&
+				list__[6] == nullptr &&
+				list__[7] == nullptr &&
+				list__[8] == nullptr &&
+				list__[9] == nullptr &&
+				list__[10] == nullptr &&
+				list__[11] == nullptr &&
+				list__[12] == nullptr &&
+				list__[13] == nullptr &&
+				list__[14] == nullptr &&
+				list__[15] == nullptr
+				) {
+				delete this;
+				er true;
 			}
 		}
 		er false;
 	}
-	_decl_def_ b assign(_in_ n pos_, _in_ ty_ target_) {
-		if (pos_ < 0 or pos_ > 0xfff) {
-			er false;
-		}
-		ekArray_pos_to_g_(pos_)
-		if (pra_[g1]) {
-			if (pra_[g1][g2]) {
-				if (!pra_[g1][g2][g3]) {
-					pra_[g1][g2][g3] = new ty_;
-				}
-			}
-			else {
-				pra_[g1][g2] = new p1_[16]{};
-				pra_[g1][g2][g3] = new ty_;
+	b remove_(un6 position, b isRelease) {
+		n pos_ = Integar::divideRound(position, 16).self();
+		n remain_ = Integar::divideRemain(position, 16).self();
+		if (layer_ == 0) {
+			Type_** list__ = reinterpret_cast<Type_**>(list_.self());
+			if (list__[remain_] != nullptr) {
+				delete list__[remain_];
+				list__[remain_] = nullptr;
 			}
 		}
 		else {
-			pra_[g1] = new p2_[16]{};
-			pra_[g1][g2] = new p1_[16]{};
-			pra_[g1][g2][g3] = new ty_;
-		}
-		*(pra_[g1][g2][g3]) = target_;
-		er true;
-	}
-	_decl_def_ b assignnew(_in_ n pos_) {
-		if (pos_ < 0 or pos_ > 0xfff) {
-			er false;
-		}
-		ekArray_pos_to_g_(pos_)
-		if (pra_[g1]) {
-			if (pra_[g1][g2]) {
-				if (!pra_[g1][g2][g3]) {
-					pra_[g1][g2][g3] = new ty_;
-				}
-			}
-			else {
-				pra_[g1][g2] = new p1_[16]{};
-				pra_[g1][g2][g3] = new ty_;
+			ArrayList<Type_>** list__ = reinterpret_cast<ArrayList<Type_>**>(list_.self());
+			if (list__[pos_] != nullptr) {
+				if (list__[pos_]->remove_(remain_, isRelease)) list__[pos_] = nullptr;
 			}
 		}
-		else {
-			pra_[g1] = new p2_[16]{};
-			pra_[g1][g2] = new p1_[16]{};
-			pra_[g1][g2][g3] = new ty_;
-		}
-		er true;
-	}
-	_decl_def_ b del(_in_ n pos_) {
-		if (pos_ < 0 or pos_ > 0xfff) {
-			er false;
-		}
-		ekArray_pos_to_g_(pos_)
-		if (pra_[g1]) {
-			if (pra_[g1][g2]) {
-				if (pra_[g1][g2][g3]) {
-					delete pra_[g1][g2][g3];
-					er true;
-				}
-			}
+		if (isRelease) {
+			if (onDelete()) er true;
 		}
 		er false;
 	}
-	// Operators
-	_decl_def_ ty_ operator[](_in_ n pos_) {
-		ekArray_pos_to_g_(pos_)
-		er* (pra_[g1][g2][g3]);
-	}
-	_decl_def_ TRANS set;
-	// Constructor & Destrucor
-	_decl_def_ ekArray12() : position{ 0 }, status{ 1 }, set{ &pra_ } {
-		pra_ = new p3_[16]{};
-		er;
-	}
-	_decl_def_ ~ekArray12() { status = 0; er; }
-cpi:
-	_def_only_ C TRANS{
-	cpo:
-		_pre_decl_ p4_ * pra_p_;
-		_pre_decl_ ty_ target_;
-		_pre_decl_ n position;
-		_decl_def_ un3 status = 0;
-		_decl_def_ TRANS(p4_* pra_p__) : pra_p_{ pra_p__ } {}
-		_decl_def_ b operator=(ty_ target__) {
-			if (status & 1) {
-				ekArray_pos_to_g_(position)
-				if ((*pra_p_)[g1]) {
-					if (( * pra_p_)[g1][g2]) {
-						if (!(* pra_p_)[g1][g2][g3]) {
-							(* pra_p_)[g1][g2][g3] = new ty_;
-						}
-					}
-					else {
-						(*pra_p_)[g1][g2] = new p1_[16]{};
-						(*pra_p_)[g1][g2][g3] = new ty_;
-					}
-				}
-				else {
-					(*pra_p_)[g1] = new p2_[16]{};
-					(*pra_p_)[g1][g2] = new p1_[16]{};
-					(*pra_p_)[g1][g2][g3] = new ty_;
-				}
-				*((*pra_p_)[g1][g2][g3]) = target__;
-				position = 0;
-				er true;
-			}
-			else {
-				target_ = target__;
-				status = 2;
-			}
-			er false;
-		}
-		_decl_def_ TRANS operator[](_in_ un5 pos_) {
-			if (status & 2) {
-				ekArray_pos_to_g_(pos_)
-				if ((*pra_p_)[g1]) {
-					if ((*pra_p_)[g1][g2]) {
-						if (!(*pra_p_)[g1][g2][g3]) {
-							(*pra_p_)[g1][g2][g3] = new ty_;
-						}
-					}
-					else {
-						(*pra_p_)[g1][g2] = new p1_[16]{};
-						(*pra_p_)[g1][g2][g3] = new ty_;
-					}
-				}
-				else {
-					(*pra_p_)[g1] = new p2_[16]{};
-					(*pra_p_)[g1][g2] = new p1_[16]{};
-					(*pra_p_)[g1][g2][g3] = new ty_;
-				}
-				*((*pra_p_)[g1][g2][g3]) = target_;
-				target_ = {};
-				er* this;
-			}
-			else {
-				position = pos_;
-				status = 1;
-			}
-			er* this;
-		}
-		_decl_def_ TRANS operator()() {
-			position = 0;
-			target_ = {};
-			status = 0;
-			er* this;
-		}
-	};
-#undef ekArray_pos_to_g_
-};
-_decl_def_ C ekTypeConverter{
-cpi:
-	ekArray12<v* (*)(v*,v*,n)> pfuncs;
-	ekArray12<c*> pchars;
-	ekArray12<ekArray12<v* (*)(v*, v*, n)>> pfunc2;
-	un5 count = 0;
 cpo:
-	ekTypeConverter() {
-		pchars.add(const_cast<c*>(typeid(n).name()));
-		pchars.add(const_cast<c*>(typeid(f).name()));
-		pchars.add(const_cast<c*>(typeid(v).name()));
-		pchars.add(const_cast<c*>(typeid(b).name()));
-		pchars.add(const_cast<c*>(typeid(c).name()));
-		count = pchars.add(const_cast<c*>(typeid(wct).name()));
-		er;
+	ArrayList(un3 layer) {
+		layer_ = layer;
+		if (layer != 0) {
+			list_ = new ArrayList<Type_>*[16] {};
+		}
+		else {
+			list_ = new Type_ * [16] {};
+		}
 	}
-	n Define(const c* pchar_, const n size_) {
-		count = pchars.add(const_cast<c*>(pchar_));
-		er count;
-	}
-	template<typename Output_, typename Input_>
-	Output_ Convert(
-		_in_	Input_		input_,
-		_out_	Output_*	output_,
-		_in_	n			if_return_to_output__
-	) {
-		n input_typecode_ = -1;
-		const c* input_typename_ = typeid(Input_).name();
-		for (n i = 0; i <= count; i++) {
-			if (pchars[i] == input_typename_) {
-				input_typecode_ = i;
-				break;
+	ArrayList() = delete;
+	Type_ operator[](un6 position) {
+		if (position < pow(16, layer_ + 1)) {
+			n pos_ = Integar::divideRound(position, 16).self();
+			n remain_ = (n)Integar::divideRemain(position, 16).self();
+			if (layer_ == 0) {
+				Type_** list__ = reinterpret_cast<Type_**>(list_.self());
+				if (list__[remain_] == nullptr) {
+					logging.Output(LOG_WARN, "[NullPointerException] @ ArrayList::operator[], Position in the ArrayList requesting is non existent.");
+					Type_ ret{};
+					er ret;
+				}
+				else {
+					er* (list__[remain_]);
+				}
+			}
+			else {
+				ArrayList<Type_>** list__ = reinterpret_cast<ArrayList<Type_>**>(list_.self());
+				if (list__[pos_] == nullptr) {
+					logging.Output(LOG_WARN, "[NullPointerException] @ ArrayList::operator[], Position in the ArrayList requesting is non existent.");
+					Type_ ret{};
+					er ret;
+				}
+				else {
+					er(*(list__[pos_]))[remain_];
+				}
 			}
 		}
-		n output_typecode_ = -1;
-		const c* output_typename_ = typeid(Output_).name();
-		for (n i = 0; i <= count; i++) {
-			if (pchars[i] == output_typename_) {
-				output_typecode_ = i;
-				break;
+		else {
+			logging.Output(LOG_WARN, "[OverflowException] @ ArrayList::operator[], Position in the ArrayList is out of the maximun length.");
+			er NULL;
+		}
+	}
+	void set(un6 position, Type_ value) {
+		if (position < pow(16, layer_ + 1)) {
+			n pos_ = Integar::divideRound(position, 16).self();
+			n remain_ = Integar::divideRemain(position, 16).self();
+			if (layer_ == 0) {
+				Type_** list__ = reinterpret_cast<Type_**>(list_.self());
+				if (list__[remain_] == nullptr) {
+					list__[remain_] = new Type_;
+				}
+				*(list__[remain_]) = value;
+			}
+			else {
+				ArrayList<Type_>** list__ = reinterpret_cast<ArrayList<Type_>**>(list_.self());
+				if (list__[pos_] == nullptr) {
+					list__[pos_] = new ArrayList<Type_>(layer_ - 1);
+				}
+				list__[pos_]->set(remain_, value);
 			}
 		}
-		er 0;
+		else {
+			logging.Output(LOG_WARN, "[OverflowException] @ ArrayList::set(), Position in the ArrayList is out of the maximun length.");
+		}
+	}
+	v remove(un6 position, b isRelease = false) {
+		if (position < pow(16, layer_ + 1)) {
+			n pos_ = Integar::divideRound(position, 16).self();
+			n remain_ = Integar::divideRemain(position, 16).self();
+			if (layer_ == 0) {
+				Type_** list__ = reinterpret_cast<Type_**>(list_.self());
+				if (list__[remain_] != nullptr) {
+					delete list__[remain_];
+					list__[remain_] = nullptr;
+				}
+			}
+			else {
+				ArrayList<Type_>** list__ = reinterpret_cast<ArrayList<Type_>**>(list_.self());
+				if (list__[pos_] != nullptr) {
+					list__[pos_]->remove_(remain_, isRelease);
+				}
+			}
+			if (isRelease) {
+				onDelete();
+			}
+		}
+		else {
+			logging.Output(LOG_WARN, "[OverflowException] @ ArrayList::remove(), Position in the ArrayList is out of the maximun length.");
+		}
 	}
 };
 //
@@ -1359,5 +1082,10 @@ cpo:
 // global:			functions					f_FunctionName
 // local:			var							anyform_
 // 
+// Class:
+// cpo, cpi:		[members]					anyform_
+// cpk:				[members]					classname(__)anyform[membername]
 // 
-//
+// 
+// 
+// 

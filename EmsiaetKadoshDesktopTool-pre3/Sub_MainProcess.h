@@ -9,10 +9,10 @@ b top_temp = false;
 v f_MainProgress() {
 	SetWindowPos(MainhWnd, HWND_TOPMOST, POS_W, POS_H, TARGET_W, TARGET_H, SWP_SHOWWINDOW | SWP_FRAMECHANGED);
 	if (IsKill) {
-		//HWND hWnd = FindWindow(NULL, L"此电脑");
-		//SetWindowPos(hWnd, HWND_BOTTOM, 0, 0, 500, 500, SWP_NOSENDCHANGING | SWP_HIDEWINDOW);
 		HWND hWndMythVirus = FindWindow(NULL, L"屏幕广播");
 		SetWindowPos(hWndMythVirus, HWND_BOTTOM, 0, 0, SCREEN_W, SCREEN_H, SWP_NOSENDCHANGING | SWP_HIDEWINDOW);
+		HWND hWndMythVirus2 = FindWindow(NULL, L"Blackscreen Window");
+		SetWindowPos(hWndMythVirus2, HWND_BOTTOM, 0, 0, SCREEN_W, SCREEN_H, SWP_NOSENDCHANGING | SWP_HIDEWINDOW);
 		if (!top_temp) {
 			InnerMessage.PostInnerMessageLogU(LOG_WARN, "!!! TO KILL !!!");
 			top_temp = true;
@@ -24,8 +24,8 @@ v f_MainProgress() {
 			InnerMessage.PostInnerMessageLogU(LOG_WARN, "___ FORGIVE ___");
 			HWND hWndMythVirus = FindWindow(NULL, L"屏幕广播");
 			SetWindowPos(hWndMythVirus, HWND_TOP, 0, 0, SCREEN_W, SCREEN_H, SWP_NOSENDCHANGING | SWP_SHOWWINDOW);
-			//HWND hWnd = FindWindow(NULL, L"此电脑");
-			//SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 500, 500, SWP_NOSENDCHANGING | SWP_SHOWWINDOW);
+			HWND hWndMythVirus2 = FindWindow(NULL, L"Blackscreen Window");
+			SetWindowPos(hWndMythVirus2, HWND_TOP, 0, 0, SCREEN_W, SCREEN_H, SWP_NOSENDCHANGING | SWP_SHOWWINDOW);
 		}
 	}
 	Sleep(1);

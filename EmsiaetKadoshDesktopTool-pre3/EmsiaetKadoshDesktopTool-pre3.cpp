@@ -19,7 +19,7 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 int __stdcall wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow) {
     ShowCmd(CMD_stdout);
-    logging.logrank = LOG_INFO;
+    logging.logrank = LOG_DEBUG;
     logging.Output(LOG_INFO, "EKDT started!");
 
     UNREFERENCED_PARAMETER(hPrevInstance);
@@ -32,18 +32,6 @@ int __stdcall wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
     mainThread.detach();
     std::thread hookThread(f_HookLoop);
     hookThread.detach();
-
-    ekArray12<ekArray12<n>*> ekarn2;
-    ekArray12<n> ekarn;
-    n position = ekarn2.add(&ekarn);
-    ekarn2[position]->add(0);
-    ekarn2[position]->add(1);
-    ekarn2[position]->add(2);
-    position = ekarn2.add(&ekarn);
-    ekarn2[position]->add(0);
-    ekarn2[position]->add(1);
-    ekarn2[position]->add(2);
-    COUTEDL((*(ekarn2[position]))[2]);
 
     // 初始化全局字符串
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
